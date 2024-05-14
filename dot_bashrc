@@ -1,0 +1,431 @@
+# startup for bash shell
+
+# Files you make look like rw-rw-r
+umask 002
+
+# Here are a couple of functions to make csh user's lives easier.
+setenv () { export $1="$2" ; }
+unsetenv () { unset $* ; }
+vset () { eval $1 ; }
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# On a mac, we need to rebind ^O so we can use it in bash
+if [ "$(uname)" = "Darwin" ]; then
+  stty flush ^@
+fi
+
+# Modify a colon (:) separated variable.  The operation is specified by the
+# first argument, $1.  The name of the variable is specified in $2.
+# The additions/modifications are given in arguments 3 and 4, as
+# necessary.  The supported operations are append, prepend, remove, replace.
+modpath () {
+  local value result
+  eval value=\"\$$2\"
+  case "$1" in 
+    prepend)
+      case "$value" in
+        *:$3:*|*:$3|$3:*|$3)
+          result="$value"
+          ;;
+        .:*)
+          result=".:$3${value#.}"
+          ;;
+        "")
+          result="$3"
+          ;;
+        *)
+          result="$3:${value}"
+          ;;
+      esac
+      ;;
+    append)
+      case "$value" in
+        *:$3:*|*:$3|$3:*|$3)
+          result="$value"
+          ;;
+        *:.)
+          result="${value%.}$3:."
+          ;;
+        "")
+          result="$3"
+          ;;
+        *)
+          result="${value}:$3"
+          ;;
+      esac
+      ;;
+    remove)
+      for i in $(IFS=:; echo $value); do
+          if [ "$i" != "$3" ]; then
+              case "$result" in
+                "") result="$i" ;;
+                *) result="$result:$i" ;;
+              esac
+          fi
+      done
+      ;;
+    replace)
+      for i in $(IFS=:; echo $value); do
+          if [ "$i" != "$3" ]; then
+              case "$result" in
+                "") result="$i" ;;
+                *) result="$result:$i" ;;
+              esac
+          else
+              case $result in
+                "") result="$4";;
+                *)  result="$result:$4"
+              esac
+          fi
+      done
+      ;;
+  esac
+
+  eval $2=$result
+}
+
+# convenience routine which appends a string to a path.
+append () {
+    modpath append "$1" "$2"
+}
+
+# convenience routine which prepends a string to a path.
+prepend () {
+    modpath prepend "$1" "$2" 
+}
+# convenience routine which prepends a string to a path.
+remove () {
+    modpath remove "$1" "$2" 
+}
+# convenience routine which prepends a string to a path.
+replace () {
+    modpath replace "$1" "$2" "$3"
+}
+
+# Set ignoreeof if you don't want EOF as the sole input to the shell to
+# immediately signal a quit condition.  This only happens at the start
+# of a line if the line is empty, and you haven't just deleted a character
+# with C-d.  I set this to 2 so that it requires 3 successive ^D's to exit
+ignoreeof=2
+
+# Set auto_resume if you want TWENEX style behaviour for command names.
+auto_resume=
+
+# Set notify if you want to be asynchronously notified about background
+# job completion.
+notify=
+set -o notify
+
+# make it so I can use variable names as arguments to cd and pushd
+shopt -s cdable_vars
+
+# Make it so that failed `exec' commands don't flush this shell.
+no_exit_on_failed_exec=
+
+# The use of SHLVL allows one to see what level of recursive shell is 
+# executing.  Bash automagically increments SHLVL if it is in the environment
+# when it starts
+#  PS1="(${SHLVL})\h\\$ "
+#  PS1='\033]0;\h:\w\007\h:\W\\$ '
+PS1='\[\e]0;\h:\w\007\]\h\\$ '
+PS2="?> "
+
+# Append lines to history file, not overwrite
+shopt -s histappend
+
+export HISTSIZE=256
+export HISTFILESIZE=2048
+export HISTCONTROL=ignoreboth
+export HISTTIMEFORMAT='%F %T '
+export HISTFILESIZE=10000
+export HISTSIZE=10000
+
+# set this if you want the shell to notify you when you have new mail
+unset MAILCHECK
+
+# put multi-line commands in seperate history lines
+shopt -u lithist 
+shopt -u cmdhist
+
+# if hashed commands don't exist, search path
+shopt -s checkhash
+
+# check the window size after each command and adjust env vars
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# Here are the extensions I want bash to ignore on completions.
+export FIGNORE='.o:.elc:~:.tndx:.obj:.class'
+
+# Enable paste operation to include trailing newline.
+bind 'set enable-bracketed-paste off'
+
+# A couple of default aliases.
+alias j='jobs -l'
+alias p=pushd
+alias po=popd
+alias pu=pushd
+alias ls='ls -F'
+alias where=dirs
+alias lo=logout
+alias bye=exit
+alias which="type -path"
+alias more=less
+alias mroe=less
+alias suod=sudo
+alias z=suspend
+alias op="sudo -u operator"
+# For idiot Macs.
+alias HEAD="lwp-request -m HEAD"
+alias last="/usr/bin/last | grep -v nessus | head"
+alias co="git checkout"
+alias br="git branch"
+alias pj="python -m json.tool"
+alias rpj="ruby -e \"require 'json'; puts (JSON.pretty_generate JSON.parse(STDIN.read))\""
+alias puppetdb-tunnel='ssh -L 9898:puppetdb.prod.away.blue:80 -L 8888:asppup010.prod.away.blue:8888 aspadm048.prod.away.blue'
+
+keepalive () { cnt=0; while true; do echo -ne "keepalive $cnt\r"; sleep 60; cnt=$[cnt+1]; done }
+runx () { cd ; rotate startx.log; ssh-agent startxfce4 >startx.log 2>&1 ;}
+wh () { eval echo \$$1 ; }
+manit () { nroff -man $* | less ; }
+xhdr () { echo -en "\033]0;$@\007" ; }
+dirmove () { /etc/dump 0sdf 30000 6250 - $1 | rsh $2 "cd $3; /etc/restore rf -" ; }
+mconnect () { telnet $1 25 ; }
+in-addr () { echo $1 | awk -F. '{printf("%d.%d.%d.%d.in-addr.arpa.\n", $4, $3, $2, $1)}'; }
+lt () { ls -ltrh $1 | tail; }
+current-branch () { git rev-parse --symbolic-full-name --abbrev-ref HEAD; }
+
+# From http://linux.ncl.ac.uk/encrypt/
+mntsec () {
+    sudo losetup -e blowfish /dev/loop0 ~/misc/save-me.iso;
+    mount /mnt/loop;
+}
+umntsec () {
+    sync; umount /mnt/loop;
+    sudo losetup -d /dev/loop0;
+    sync;
+}
+
+function ipfreely {
+    for ip in $*; do
+	  _curl -s http://adm01.aus1.homeaway.live/cgi-bin/ipfreely.bash?ip=${ip} | egrep 'is not in use|STOP'
+    done
+}
+
+
+syn-mac () {
+    ~/Library/Synergy/synergyc -f --name davide-mac davide ;
+}
+
+syn-home () {
+      ~/Library/Synergy/synergyc -f --name davide-laptop 192.168.1.15
+} 
+
+psearch () {
+    ( cd ~/Source/operations/puppet-modules;
+    find hieradata modules -type f -print0 | xargs -0 grep -i $1 )
+}
+
+alias p4search=${HOME}/Source/Puppet-NG/control/scripts/puppet-search.sh
+alias p5search=${HOME}/Source/Puppet-NG/control/scripts/puppet-search.sh
+#  p4search () {
+#      ( cd ~/Source/Puppet4/control;
+#      find hieradata modules -type f -print0 | xargs -0 grep -i "$1")
+#  }
+
+# Test for TCP port connectivity to remote server.
+# https://superuser.com/questions/621870/test-if-a-port-on-a-remote-system-is-reachable-without-telnet
+# function requires a host and port
+popen () {
+    if [ -z "$1" -o -z "$2" ]; then
+        echo "usage: popen HOST PORT"
+        return 9
+    fi
+    timeout 1 bash -c "</dev/tcp/$1/$2 && echo Port is open || echo Port is closed" || echo Connection timeout
+}
+
+# From http://stackoverflow.com/questions/53569/how-to-get-the-changes-on-a-branch-in-git
+function parse_git_branch {
+  git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'
+}
+
+function gbin { 
+    echo branch \($1\) has these commits and \($(parse_git_branch)\) does not 
+    git log ..$1 --no-merges --format='%h | Author:%an | Date:%ad | %s' --date=local
+}
+
+function gbout { 
+    echo branch \($(parse_git_branch)\) has these commits and \($1\) does not 
+    git log $1.. --no-merges --format='%h | Author:%an | Date:%ad | %s' --date=local
+}
+
+#  case "$RESIZE_TERM" in
+#    "1") eval `resize`
+#         unset RESIZE_TERM
+#         ;;
+#  esac
+
+# Seems a LANG of UTF-8 causes some problems with my settings. 
+# Try to unset it on Linux hosts.
+if [ "$(uname)" = "Linux" ]; then
+    setenv LANG en_US.iso88591
+    setenv LOCALE C
+fi
+
+if [ "$(uname)" = "Darwin" ]; then
+    setenv LANG C
+    setenv LOCALE C
+fi
+
+if [ -f /etc/bash_completion ]; then
+  . /etc/bash_completion
+fi
+
+if [ -f /usr/local/etc/bash_completion ]; then
+    . /usr/local/etc/bash_completion
+fi
+
+if [[ -f /opt/homebrew//etc/profile.d/bash_completion.sh ]]; then
+    . /opt/homebrew//etc/profile.d/bash_completion.sh
+fi
+
+# For git
+if [ -f ~/bin/git-completion.bash ]; then
+    . ~/bin/git-completion.bash
+fi
+
+complete -F _known_hosts root
+# Had to comment out because it doesn't work on CentOS7
+#complete -o nospace -v -F _cd p
+  
+# Path setup. Use the modpath functions so we preserve system set path.
+prepend PATH /usr/local/bin
+[ -d /usr/local/git/bin ] && append PATH /usr/local/git/bin
+[ -d ~/bin/perl ] && prepend PATH ~/bin/perl
+[ -d /opt/puppetlabs/pdk/bin ] && prepend PATH /opt/puppetlabs/pdk/bin
+
+if [[ $(uname -m) = 'arm64' ]]; then
+  prepend PATH /opt/homebrew/bin
+fi
+
+prepend PATH ~/bin
+
+append PATH /usr/local/sbin
+append PATH /usr/sbin
+append PATH /sbin
+
+# Things to do on the Mac
+if [[ $(uname) = "Darwin" && $(uname -m) = 'x86_64' ]]; then
+    prepend PATH /usr/local/Cellar/coreutils/8.23/libexec/gnubin
+
+    # Alias for time tracking
+    alias tc="emacsclient ~/Documents/time-tracking.txt"
+fi
+
+if [ "$(uname)" = "Darwin" ]; then
+    # Set homebrew to not auto-cleanup on install
+    export HOMEBREW_NO_INSTALL_CLEANUP=true
+fi
+
+# For OMSA, stupid dell
+[ -d /opt/dell/srvadmin/sbin/ ] && append PATH /opt/dell/srvadmin/sbin
+[ -d /opt/dell/srvadmin/bin ] && append PATH /opt/dell/srvadmin/bin
+
+## For Maven (mvn) on the mac
+#Mavend="${HOME}/Source/maven"
+#if [ -d "$Mavend" ]; then
+#    echo "setting up for maven"
+#    #Create an alias in your shells profile to point to both versions
+#    MAVEN_HOME2=${Mavend}/apache-maven-2.2.1
+#    MAVEN_HOME3=${Mavend}/apache-maven-3.2.1
+#    alias mvn2=$MAVEN_HOME2/bin/mvn
+#    alias mvn3=$MAVEN_HOME3/bin/mvn
+#    alias mvn=$MAVEN_HOME3/bin/mvn
+#fi
+
+# For Perl
+if [ -d ~/perl5/lib/perl5 ]; then
+    export PERL5LIB=~/perl5/lib/perl5
+fi
+
+# For rbenv
+if [ -d ~/.rbenv/bin ]; then
+    prepend PATH ~/.rbenv/bin
+    if [ -f ~/.rbenv-init ]; then
+	. ~/.rbenv-init
+    fi
+    #eval "$(rbenv init -)"
+fi
+
+## For pyenv, but not on docker images
+if [[ -d ~/.pyenv/shims && ! -f /.dockerenv ]]; then
+    prepend PATH ~/.pyenv/shims
+    export PYENV_ROOT=~/.pyenv
+    if command -v pyenv 1>/dev/null 2>&1; then
+	eval "$(pyenv init -)"
+	#eval "$(pyenv virtualenv-init -)"
+    fi
+fi
+export PYTHONDONTWRITEBYTECODE=1
+
+if [ -d /usr/local/go ]; then
+    append PATH /usr/local/go/bin
+    if [ -d ${HOME}/Source/go ]; then
+	export GOPATH=${HOME}/Source/go
+	append PATH $(go env GOPATH)/bin
+    fi
+fi
+
+# For things puppet
+if [ -d /opt/puppetlabs/bin ]; then
+    append PATH /opt/puppetlabs/bin
+fi
+
+# Tokens
+if [[ -f ~/.tokens ]]; then
+    source ~/.tokens
+fi
+export CDPATH='.:~:~/Source/eg-github/hci-sysops/:~/Source/eg-github/dpi-image-factory:~/Source/eg-github/davide'
+
+# Jesse's nsupdog
+alias nsupdog='docker run --rm -it --mount type=bind,source="$(pwd)",target=/work,readonly dl2.homeawaycorp.com/techops-docker/nsupdog:0.2.0'
+
+# Attempt to get various root CA certs available to python
+#pem_file=/Users/davide/Source/techops/ha-cacerts-packaging/homeaway-certs/all-roots.pem
+#if [ -f $pem_file ]; then
+#    export SSL_CERT_FILE=${pem_file}
+#    export REQUESTS_CA_BUNDLE=${pem_file}
+#fi
+
+alias ssl-check="~/Source/operations/ssl-tools/sslinfo.sh -c ~/Source/operations/ssl-tools/cacerts -s"
+
+if [[ -d /opt/homebrew ]]; then
+    AWS_CLI=/opt/homebrew/bin/aws
+else
+    AWS_CLI=/usr/local/bin/aws
+fi
+
+# Setup some alias to make things easier
+alias tf="get-creds; /usr/local/bin/terraform"
+alias aws="get-creds; $AWS_CLI"
+alias tg="get-creds; /usr/local/bin/terragrunt"
+alias terraform="get-creds; /usr/local/bin/terraform"
+alias terragrunt="get-creds; /usr/local/bin/terragrunt"
+
+if [[ -f ~/Source/eg-github/davide/get-creds/be-aws.bash ]]; then
+    source ~/Source/eg-github/davide/get-creds/be-aws.bash
+    be () { be-aws "$@"; }
+    complete -F _be-aws-completions be
+    alias aws-who="be"
+fi
+
+if [[ -d ~/Source/eg-github/davide/my-almalinux9 ]]; then
+    alias almalinux9="~/Source/eg-github/davide/my-almalinux9/run-it.sh"
+fi
+if [[ -d ~/Source/eg-github/davide/my-centos7 ]]; then
+    alias centos7="~/Source/eg-github/davide/my-centos7/run-it.sh"
+fi
