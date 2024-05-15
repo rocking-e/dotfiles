@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# This is a script that should run whenever a change is detected in
+# either the "tokens" file or the .gitconfig file. It will then
+# set/reset the "instedOf" values for the EG git URLs. This is
+# adapting the info from
+# https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
+
+# .gitconfig hash: {{ include "dot_gitconfig.tmpl" | sha256sum }}
+# .config/private/.tokens: {{ include "private_dot_config/private_private/encrypted_readonly_dot_tokens.age" | sha256sum }}
+
+: ${git_config:={{ .chezmoi.homeDir }}/.gitconfig}
+: ${eg_github:=github.expedia.biz}
+: ${token_file:={{ .chezmoi.homeDir }}/.config/private/.tokens}
+: ${eg_github_token:=EG_GITHUB_TOKEN}
+
+# Load up the tokens
+source "${token_file}"
+
+git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof https://${eg_github}
+git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof git@${eg_github}:
+

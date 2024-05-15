@@ -1,0 +1,31 @@
+{{- /*
+  This template is used to create/modify the chezmoi config file
+
+  It was first created using the command 'chezmoi edit-config-template'.
+  Once created, the actual config file at ~/.config/chezmoi/chezmoi.toml
+  is updated via the `chezmoi init` command.
+
+  Processing the template file triggers prompts to fill-in machine-specific
+  templateable values. This is used to set "data" values that can be used in
+  other templates. The initial data values set the full name and email address
+  of the user for use in the ~/.gitconfig tempalte.
+
+  This file is processed only by 'chezmoi init'. So after making changes
+  execute that comand.
+*/ -}}
+{{- /* This file supports Go's text/template language. */ -}}
+
+{{- $email := promptString "Git email address for the author/committer" "davide@expediagroup.com" }}
+{{- $name := promptString "Git username for the author/committer" "David Eckelkamp" }}
+# The chezmoi configuration file for {{ $name }} - {{ $email }}
+
+umask = 0x002
+
+encryption = "age"
+[age]
+    identity = "/home/davide/age.txt"
+    recipient = "age1xfq3p0hnj2qlvesp88xl3ccfwdp3ex4kc5ckuj9yyp35k2tazvrq4ukdyh"
+
+[data]
+    email = "{{ $email }}"
+    name = "{{ $name }}"
