@@ -23,7 +23,7 @@ umask = 0x002
 
 encryption = "age"
 [age]
-    identity = "/home/davide/age.txt"
+    identity = "{{ .chezmoi.homeDir }}/age.txt"
     recipient = "age1xfq3p0hnj2qlvesp88xl3ccfwdp3ex4kc5ckuj9yyp35k2tazvrq4ukdyh"
 
 [data]

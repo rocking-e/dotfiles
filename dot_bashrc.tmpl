@@ -299,7 +299,7 @@ if [ -f ~/bin/git-completion.bash ]; then
 fi
 
 complete -F _known_hosts root
-{{ if (not (and (eq .chezmoi.osRelease.id "centos") (eq .chezmoi.osRelease.versionID "7"))) -}}
+{{ if (or (eq .chezmoi.os "darwin") (not (and (eq .chezmoi.osRelease.id "centos") (eq .chezmoi.osRelease.versionID "7")))) -}}
 # Below doesn't work on CentOS7
 complete -o nospace -v -F _cd p
 {{- end }}
@@ -388,8 +388,8 @@ if [ -d /opt/puppetlabs/bin ]; then
 fi
 
 # Tokens
-if [[ -f ~/.tokens ]]; then
-    source ~/.tokens
+if [[ -f ~/.config/private/.tokens ]]; then
+    source ~/.config/private/.tokens
 fi
 export CDPATH='.:~:~/Source/eg-github/hci-sysops/:~/Source/eg-github/dpi-image-factory:~/Source/eg-github/davide'
 
