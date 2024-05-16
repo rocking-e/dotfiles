@@ -17,6 +17,11 @@
 # Load up the tokens
 source "${token_file}"
 
-git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof https://${eg_github}
-git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof git@${eg_github}:
+if ! grep -q "insteadof.*=.*https://${eg_github}" ~/.gitconfig; then
+    git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof https://${eg_github}
+fi
+if ! grep -q "insteadof.*=.*git@${eg_github}" ~/.gitconfig; then
+    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof git@${eg_github}:
+fi
+
 
