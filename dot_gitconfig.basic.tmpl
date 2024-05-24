@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
-	name = {{ .chezmoi.config.data.name }} ({{ .chezmoi.username }})
-	email = {{ .chezmoi.config.data.email }}
+	name = David Eckelkamp (davide)
+	email = davide@expediagroup.com
 
 [alias]
     co = checkout
@@ -48,7 +48,7 @@
 [mergetool]
     keepBackup = true
 [core]
-    excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
+    excludesfile = /Users/davide/.gitignore_global
     editor = emacs
 [difftool "sourcetree"]
     cmd = opendiff \"$LOCAL\" \"$REMOTE\"

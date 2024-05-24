@@ -1,27 +1,40 @@
 #!/usr/bin/env bash
 
 # This is a script that should run whenever a change is detected in
-# either the "tokens" file or the .gitconfig file. It will then
-# set/reset the "instedOf" values for the EG git URLs. This is
-# adapting the info from
+# either the "tokens" file or the .gitconfig.basic file. It will then copy the .basic file to the
+# actual .gitconfig file, and then set/reset the "insteadOf" values for the EG git URLs.
+# This is adapting the info from
 # https://www.chezmoi.io/user-guide/use-scripts-to-perform-actions/#run-a-script-when-the-contents-of-another-file-changes
 
-# .gitconfig hash: {{ include "dot_gitconfig.tmpl" | sha256sum }}
+# .gitconfig.basic hash: {{ include "dot_gitconfig.basic.tmpl" | sha256sum }}
 # .config/private/.tokens: {{ include "private_dot_config/private_private/encrypted_readonly_dot_tokens.age" | sha256sum }}
 
 : ${git_config:={{ .chezmoi.homeDir }}/.gitconfig}
+: ${git_config_basic:={{ .chezmoi.homeDir }}/.gitconfig.basic}
 : ${eg_github:=github.expedia.biz}
+: ${eg_ghec:=github.com}
 : ${token_file:={{ .chezmoi.homeDir }}/.config/private/.tokens}
 : ${eg_github_token:=EG_GITHUB_TOKEN}
+: ${eg_ghec_token:=GHEC_TOKEN}
 
 # Load up the tokens
 source "${token_file}"
 
+# copy the .basic file to the actual .gitconfig file
+cp "${git_config_basic}" "${git_config}"
+
 if ! grep -q "insteadof.*=.*https://${eg_github}" ~/.gitconfig; then
-    git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof https://${eg_github}
+    git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}/.insteadof https://${eg_github}
 fi
 if ! grep -q "insteadof.*=.*git@${eg_github}" ~/.gitconfig; then
-    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}.insteadof git@${eg_github}:
+    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}/.insteadof git@${eg_github}:
+fi
+
+if ! grep -q "insteadof.*=.*https://${eg_ghec}" ~/.gitconfig; then
+    git config --global url.https://{{ .chezmoi.username }}:${!eg_ghec_token}@${eg_ghec}/.insteadof https://${eg_ghec}
+fi
+if ! grep -q "insteadof.*=.*git@${eg_ghec}" ~/.gitconfig; then
+    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_ghec_token}@${eg_ghec}/.insteadof git@${eg_ghec}:
 fi
 
 

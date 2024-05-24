@@ -1,15 +1,25 @@
 # dotfiles
 My dot files managed by chezmoi
 
-## Intial Install and Setup
+## Initial Install and Setup
 
 The first step is to install `chezmoi`. For a Mac, it is possible to
 install via `brew`. For Linux machines it's easier to pull the
 binary. That will also work with a Mac.
 
+After installation the git repository has to be cloned locally and then the command `chezmoi init`
+must be run, followed by `chezmoi apply`. All this can be combined into one command:
+
+```
+CHEZMOI_REPO="https://github.com/$(id -un)/initfiles"
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply "${CHEZMOI_REPO}"
+```
+
+The value of `CHEZMOI_REPO` should be set to the correct URL of the repository for your init files.
+If the repository is a public repository on `github.com` `CHEZMOI_REPO` can be set as the user name.
 If you want to use an SSH based `git` URL you'll need to have `git`
 installed on the system. If you use an HTTP URL `chezmoi` can clone
-the repo.
+the repository with its built-in `git` client.
 
 ## Encryption
 
