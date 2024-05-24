@@ -1,0 +1,138 @@
+#!/usr/bin/perl -w
+
+# produce a report of swap usage by process, ordered by most to least
+# 
+# Modeled after script at http://superuser.com/questions/300004/how-can-i-find-out-processes-are-using-swap-space
+#
+
+use strict;
+use File::Basename;
+
+# Make "forward" declaration of some subroutines to make "-w" happy;
+sub cleanup_cmd;
+
+if ( $^O !~ /linux/i) {
+    print STDERR "Sorry, script only runs on Linux: $^O\n";
+    exit 9
+}
+
+# Grab list of process IDs
+my @pList = glob("/proc/[0-9]*");
+
+if ($#pList <= 0) {
+    print STDERR "hum, somthing is wrong. No process ids returned from /proc\n";
+    exit 2;
+}
+
+my %SwapUsed;
+my %SwapCmd;
+
+foreach my $p (@pList) {
+    my $smapFile = "$p/smaps";
+    next if ! -f $smapFile;
+    my $pid = basename($p);
+
+    my $swapUsed = 0;
+    open(SMAP, "<$smapFile") || die "Could not open $smapFile: $!\n";
+    foreach my $l (<SMAP>) {
+	if ($l =~ /^Swap:\s*(\d+)/) {
+	    $swapUsed += $1;
+	}
+    }
+    # Was there any?
+    if ($swapUsed > 0) {
+	# There was some swap. So save away the pid, the amount and the
+	# command line.
+	# Need the command, so we have to open the 'cmdline' file
+	my $cmd;
+	my $cmdLine;
+	my $cmdFile = "$p/cmdline";
+	if (! -f $cmdFile) {
+	    $cmd = "$p died before reading command";
+	} else {
+	    open my $fh, "<$cmdFile" 
+		or die "Could not open command line file: $cmdFile: $!\n";
+	    $cmdLine = <$fh>;
+	    close $fh;
+	    # cleanup command so the report is more readable
+	    $cmd = cleanup_cmd($cmdLine);
+	}
+	$SwapUsed{$pid} = $swapUsed;
+	$SwapCmd{$pid} = $cmd;
+    }
+    close SMAP;
+}
+
+# If there were processes with swap used, do the output
+# Might as well fetch the sorted keys to tell.
+my @sortedPIDs = sort { $SwapUsed{$a} <=> $SwapUsed{$b} } keys(%SwapUsed);
+if ($#sortedPIDs < 0) {
+    print "No swap used\n";
+    exit 0;
+}
+
+# Print the report
+my $TotalSwap = 0;
+foreach my $pid (reverse(@sortedPIDs)) {
+    $TotalSwap += $SwapUsed{$pid};
+    print "$SwapUsed{$pid}\t$pid\t$SwapCmd{$pid}\n";
+}
+print "$TotalSwap\tTotal In Use\n";
+exit 0;
+
+sub cleanup_cmd {
+    # We expect the command line string and nothing else
+    my($line, @rest) = @_;
+    # What we get is a null separated string, so break it apart
+    my @elements = split(/\0/, $line);
+    # We'll start with the first element
+    my $cmd = $elements[0];
+    
+    # If it doesn't say "homeaway" in the command somewhere, just return the
+    # first element
+    if (grep(/homeaway/, @elements) <= 0) {
+	return $cmd;
+    }
+
+    # OK, so it is probably one of ours.
+
+    # If the first token is "perl" this is an older, non-elmerized control
+    # scripts app. Ugh!
+    if ($cmd eq "perl") {
+	# The next token is the wrapper.pl file. Grab that and clean it up. 
+	$cmd = $elements[1];
+	$cmd =~ s%/resin.*%%;
+	return $cmd
+    }
+
+    # If the first element contains "/jdk" in it, we have to figure out the
+    # directory from something else
+    if ( $cmd =~ m%/jdk% ) {
+	my $l;
+	# OK, see if we match the setting of 'com.homeaway.svc.root'. We
+	# can then just take the value of that setting and we should be OK.
+	for (my $i = 0; $i < $#elements; $i++) {
+	    $l = $elements[$i];
+	    if ($l =~ /com.homeaway.svc.root/) {
+		# Seems to be a match, so delete up to and including the =
+		$l =~ s/.*=//;
+		last;
+	    } 
+	    if ($l =~ /resin.root/) {
+		# match
+		$l =~ s/.*=//;
+		last;
+	    }
+	}
+	# Try to reduce to base directory
+	$cmd = join('/', (split('/', $l))[0..4]);
+	return $cmd;
+    }
+    # If the command contains "/java" let's just plunk the first part of the
+    # path 
+    if ($cmd =~ q%/java%) {
+	$cmd = join('/', (split('/', $cmd))[0..4]);
+    }
+    return $cmd
+#    return (join(" ", @elements));
+}

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# send escape sequences to iTerm2 to change profiles
+# based on http://stackoverflow.com/questions/8598021/iterm-2-profiles
+
+if [ -z "$1" ]; then 
+    PROFIlE="default"
+else
+    PROFILE="$1"
+fi
+
+echo -e "\033]50;SetProfile=$PROFILE\a"

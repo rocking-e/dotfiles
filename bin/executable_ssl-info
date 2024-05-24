@@ -1,0 +1,15 @@
+#!/bin/bash
+
+host="$1"
+if [ -z "$host" ]; then
+    echo "usage: $(basename $0) ssl-host[:port]"
+    exit 99
+fi
+
+port=$(echo $host | cut -d: -f2)
+if [ "$host" = "$port" ]; then
+    port="443"
+fi
+
+openssl s_client -connect "$host:$port" </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -startdate -enddate
+

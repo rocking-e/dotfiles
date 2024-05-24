@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# A script to call "open" on the URL of the current directory's git repsitory.
+
+if [[ ! -d .git ]]; then
+    echo "Not a git repo directory: $PWD"
+    exit 9
+fi
+
+git_url=$(git config --get remote.origin.url)
+
+if [[ $git_url =~ ^git ]]; then
+    # url is SSH based
+    git_url=$(echo ${git_url%%.git} | sed -e 's%:%/%' -e 's%git@%https://%')
+fi
+
+echo open "$git_url"
