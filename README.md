@@ -1,34 +1,38 @@
 # dotfiles
-My dot files managed by chezmoi
 
-## Initial Install and Setup
+My dot files managed by [chezmoi](https://www.chezmoi.io).
 
-The first step is to install `chezmoi`. For a Mac, it is possible to
-install via `brew`. For Linux machines it's easier to pull the
-binary. That will also work with a Mac.
+These are my "dot files", the files I want on a machine I'm going to use. It can be a new Mac laptop
+or a Linux server. These files include my shell initialization files (like `.bashrc`) as well as
+other configuration files (like `~/.ssh/authorized_keys`).
 
-After installation the git repository has to be cloned locally and then the command `chezmoi init`
-must be run, followed by `chezmoi apply`. All this can be combined into one command:
+The [chezmoi installation](https://www.chezmoi.io/install/) has comprehensive installation
+instructions. The simplest and easiest way is a one-liner:
 
 ```
-CHEZMOI_REPO="https://github.com/$(id -un)/initfiles"
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply "${CHEZMOI_REPO}"
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply $(id -un)
 ```
 
-The value of `CHEZMOI_REPO` should be set to the correct URL of the repository for your init files.
-If the repository is a public repository on `github.com` `CHEZMOI_REPO` can be set as the user name.
-If you want to use an SSH based `git` URL you'll need to have `git`
-installed on the system. If you use an HTTP URL `chezmoi` can clone
-the repository with its built-in `git` client.
+This works if your dotfiles repository is a public repository on `github.com`. If your repository is
+not public you can provide the full URL.
+
+```
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply "https://github.com/$(id -un)/dotfiles"
+```
 
 ## Encryption
 
-To decrypt files managed by `chezmoi` two things are required. There
+To encrypt files managed by `chezmoi` two things are required. There
 must be configuration in the `.config/chezmoi/chezmoi.toml` file. And
 you must have the `age` key file created somewhere via the
 `age-keygen` file. You can create one via the command:
 
 ```
 age-keygen -o ${HOME}/age.txt
+
 ```
+
+It isn't required to have age installed on all systems where your dot files are deployed. It only
+needs to be install on one system so you can use the `age-keygen` command.
+
 
