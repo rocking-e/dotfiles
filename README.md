@@ -36,3 +36,17 @@ It isn't required to have age installed on all systems where your dot files are 
 needs to be install on one system so you can use the `age-keygen` command.
 
 
+## References
+
+Here is a partial list of github repositories I have looked at that have helped me learn `chezmoi`
+or that I have used as "inspiration" for how I manage my dot files.
+
+* [treid/dotfiles](https://github.expedia.biz/treid/dotfiles)
+* [age](https://github.com/FiloSottile/age) for encryption and decryption
+* [Bootstrap Repositories](http://dotfiles.github.io/bootstrap/)
+* [Inspiration](https://dotfiles.github.io/inspiration)
+* [Take back your dotfiles with
+Chezmoi](https://fedoramagazine.org/take-back-your-dotfiles-with-chezmoi/)
+* [twpayne/dotfiles](https://github.com/twpayne/dotfiles)
+* [webpro/awesom-dotfiles](https://github.com/webpro/awesome-dotfiles)
+* [Brew Bundle Brewfile Tips](https://gist.github.com/ChristopherA/a579274536aab36ea9966f301ff14f3f#brew-bundle-brewfile-tips)

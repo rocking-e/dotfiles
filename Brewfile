@@ -1,7 +1,9 @@
-tap "brand-expedia/tools", "https://github.expedia.biz/Brand-Expedia/homebrew-tools.git"
-tap "hci-sysops/teleport", "git@github.expedia.biz:hci-sysops/homebrew-teleport.git"
-tap "homebrew/bundle"
-tap "puppetlabs/puppet"
+# See https://docs.brew.sh/Manpage#bundle-subcommand for using the `brew bundle` command.
+# See https://github.com/Homebrew/homebrew-bundle for more information on Brewfile and what it can
+# do.
+tap "brand-expedia/tools", "https://github.expedia.biz/Brand-Expedia/homebrew-tools.git", force_auto_update: true
+tap "hci-sysops/teleport", "git@github.expedia.biz:hci-sysops/homebrew-teleport.git", force_auto_update: true
+tap "homebrew/bundle", force_auto_update: true
 brew "ansible"
 brew "black"
 brew "yamllint"
