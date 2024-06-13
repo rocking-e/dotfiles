@@ -198,6 +198,7 @@ mconnect () { telnet $1 25 ; }
 in-addr () { echo $1 | awk -F. '{printf("%d.%d.%d.%d.in-addr.arpa.\n", $4, $3, $2, $1)}'; }
 lt () { ls -ltrh $1 | tail; }
 current-branch () { git rev-parse --symbolic-full-name --abbrev-ref HEAD; }
+alias cb=current-branch
 
 # From http://linux.ncl.ac.uk/encrypt/
 mntsec () {
@@ -423,7 +424,9 @@ if [[ -f ~/Source/eg-github/davide/get-creds/be-aws.bash ]]; then
     be () { be-aws "$@"; }
     complete -F _be-aws-completions be
     alias aws-who="be"
+    alias gc="get-creds -v"
 fi
+
 
 if [[ -d ~/Source/eg-github/davide/my-almalinux9 ]]; then
     alias almalinux9="~/Source/eg-github/davide/my-almalinux9/run-it.sh"
