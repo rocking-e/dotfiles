@@ -294,6 +294,10 @@ if [[ -f /opt/homebrew//etc/profile.d/bash_completion.sh ]]; then
     . /opt/homebrew//etc/profile.d/bash_completion.sh
 fi
 
+if [[ -f /etc/profile.d/bash_completion.sh ]]; then
+    . /etc/profile.d/bash_completion.sh
+fi
+
 # For git
 if [ -f ~/bin/git-completion.bash ]; then
     . ~/bin/git-completion.bash
@@ -427,6 +431,10 @@ if [[ -f ~/Source/eg-github/davide/get-creds/be-aws.bash ]]; then
     alias gc="get-creds -v"
 fi
 
+# Set up some aliases for logging into Teleport
+if [[ -f ~/bin/teleport-logins.bash ]]; then
+   source ~/bin/teleport-logins.bash
+   fi
 
 if [[ -d ~/Source/eg-github/davide/my-almalinux9 ]]; then
     alias almalinux9="~/Source/eg-github/davide/my-almalinux9/run-it.sh"

@@ -9,7 +9,7 @@ skip_verify = false
 timeout = 0
 aws_urn = urn:amazon:webservices
 aws_session_duration = 3600
-aws_profile = saml
+aws_profile = default
 resource_id = 
 subdomain = 
 role_arn = 
@@ -79,7 +79,7 @@ app_id =
 url = https://expediagroup.okta.com/home/amazon_aws/0oa2mb7o2guMuY9lG357/272
 username = {{ .chezmoi.username }}
 provider = Okta
-mfa = Auto
+mfa = PUSH
 skip_verify = false
 timeout = 0
 aws_urn = urn:amazon:webservices
@@ -96,7 +96,7 @@ saml_cache = false
 saml_cache_file = 
 target_url = 
 disable_remember_device = false
-disable_sessions = true
+disable_sessions = false
 
 [runtimects-test]
 name = runtimects-test
