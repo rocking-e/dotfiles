@@ -423,8 +423,8 @@ alias tg="get-creds; /usr/local/bin/terragrunt"
 alias terraform="get-creds; /usr/local/bin/terraform"
 alias terragrunt="get-creds; /usr/local/bin/terragrunt"
 
-if [[ -f ~/bin/get-creds/be-aws.bash ]]; then
-    source ~/bin/get-creds/be-aws.bash
+if [[ -f ~/bin/be-aws.bash ]]; then
+    source ~/bin/be-aws.bash
     be () { be-aws "$@"; }
     complete -F _be-aws-completions be
     alias aws-who="be"
