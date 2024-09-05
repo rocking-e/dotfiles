@@ -5,21 +5,19 @@
     can be given by the AWS_PROFILE environment variable or by the
     '-p|--profile' option.
 
-    This tool can use either saml2aws or aws_key_gen to update AWS
+    This tool uses saml2aws to update AWS
     credentials in ~/.aws/credentials for the given
-    profile. The default is to use saml2aws. To use aws_key_gen set the
-    environment variable USE_AWS_KEY_GEN before invoking this tool.
+    profile. 
     
     The attribute that specifies the expiration time of the profile
-    ('x_security_token_expires' for saml2aws and 'akg_expiration_time'
-    for aws_key_gen) is examined to determine if the credentials have
-    expired. If so, either saml2aws or aws_key_gen will be launched with
+    ('x_security_token_expires' for saml2aws)
+    is examined to determine if the credentials have
+    expired. If so, saml2aws will be launched with
     the appropriate parameters to re-authenticate and update the
     credentials.
 
-    For this to work properly, a valid configuration must be present in ~/.saml2aws or
-    ~/.aws_key_gen/config. The accounts/profiles must be setup with the
-    proper names.
+    For this to work properly, a valid configuration must be present in ~/.saml2aws.
+    The accounts/profiles must be setup with the proper names.
 """
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from configparser import ConfigParser
@@ -29,6 +27,8 @@ from datetime import datetime, timezone
 from dateutil.parser import parse
 from logging import *
 
+tools = ["saml2aws", "aws_key_gen", "okta-aws-cli"]
+
 def main():
     # Setup arg parse and parse the command line.
     parser = ArgumentParser(description=__doc__,
@@ -37,11 +37,18 @@ def main():
                         help="Enable basic verbose output")
     parser.add_argument('-d', '--debug', action="store_true",
                         help="Turn on very verbose debug output")
+    parser.add_argument('-t', '--tool', action="store",
+                        choices=tools, default=os.getenv("GET_CREDS_TOOL", "saml2aws"),
+                        help="Specify the tool to use to get credentials")
     parser.add_argument('-f', '--force', action="store_true",
                         help="Refresh credentials even if they have not expired.")
     parser.add_argument('-p', '--profile', action="store",
                         default=os.getenv('AWS_PROFILE'),
                         help="Use specified AWS profile instead of environment variable")
+    parser.add_argument('--disable-sessions', action='store_true',
+                        help="Add the flag to disable sessions")
+    parser.add_argument('-n', '--dry-run', action='store_true',
+                        help="Show the command that would be executed, but don't actually execute it.")
     args = parser.parse_args()
 
     # Set the log level, default is WARNING, meaning mostly quiet
@@ -57,14 +64,8 @@ def main():
     
     aws_profile = args.profile
     if not aws_profile:
-        error("Can not find AWS_PROFILE environment variable")
+        error("Can not find AWS_PROFILE environment variable and one was not specified on the command line.")
         sys.exit(2)
-
-    # By default, use saml2aws. But, if USE_AWS_KEY_GEN environment variable
-    # is set, use aws_key_gen instead.
-    use_saml2aws = True
-    if os.getenv('USE_AWS_KEY_GEN'):
-        use_saml2aws = False
 
     config = ConfigParser()
     config.read(cred_file)
@@ -72,7 +73,7 @@ def main():
     # Set local timezone, we might need it later
     LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
 
-    if use_saml2aws:
+    if args.tool == "saml2aws":
         skip_prompt=True
         TIME_FMT = '%Y-%m-%dT%H:%M:%S%z'
         FALL_BACK_TIME = '2000-01-01T00:00:00-05:00'
@@ -84,6 +85,13 @@ def main():
             os.environ["DO_PROMPT"] = "YES"
         if os.getenv('DO_PROMPT', None) is None:
             cmd += ' --skip-prompt'
+        EXPIRE_LABEL = 'x_security_token_expires'
+        if args.disable_sessions:
+            cmd += ' --disable-sessions'
+    elif args.tool == "okta-aws-cli":
+        TIME_FMT = '%Y-%m-%dT%H:%M:%S%z'
+        FALL_BACK_TIME = '2000-01-01T00:00:00-05:00'
+        cmd = f'okta-aws-cli --profile {aws_profile}'
         EXPIRE_LABEL = 'x_security_token_expires'
     else:
         TIME_FMT = '%Y-%m-%dT%H:%M:%SZ'
@@ -97,7 +105,7 @@ def main():
     if config.has_section(aws_profile):
         expire_time_str = config.get(aws_profile, EXPIRE_LABEL,
                                     fallback=FALL_BACK_TIME)
-        if (expire_time_str == FALL_BACK_TIME) and use_saml2aws:
+        if (expire_time_str == FALL_BACK_TIME) and args.tool == "saml2aws":
             cmd = cmd.replace(' --skip-prompt', '')
         debug(f'expire_time_str = {expire_time_str}')
         debug(f'TIME_FMT = {TIME_FMT}')
@@ -106,7 +114,10 @@ def main():
         if now > expire_time or args.force:
             info(f'credentials for {aws_profile} have expired')
             debug(f'cmd = {cmd}')
-            os.system(cmd)
+            if args.dry_run:
+                print(cmd)
+            else:
+                os.system(cmd)
         else:
             # Creds still valid, show how much time left
             time_left = expire_time - now
@@ -119,7 +130,10 @@ def main():
     else:
         warning(f'no section for {aws_profile}, doing initial login')
         cmd = cmd.replace(' --skip-prompt', '')
-        os.system(cmd)
+        if args.dry_run:
+            print(cmd)
+        else:
+            os.system(cmd)
 
 if __name__ == "__main__":
     main()
