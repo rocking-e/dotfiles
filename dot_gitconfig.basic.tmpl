@@ -8,6 +8,7 @@
     ci = commit
     st = status -sb
     br = branch
+    brl = branch --sort=-committerdate
     hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
     type = cat-file -t
     dump = cat-file -p
@@ -63,5 +64,9 @@
 [rebase]
 	autoSquash = true
 	autoStash = true
+[tag]
+	sort = -taggerdate
+[diff]
+	algorithm = histogram
 [help]
 	autocorrect = prompt
