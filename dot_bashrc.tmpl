@@ -337,6 +337,8 @@ fi
 if [ "$(uname)" = "Darwin" ]; then
     # Set homebrew to not auto-cleanup on install
     export HOMEBREW_NO_INSTALL_CLEANUP=true
+    export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
+    export HOMEBREW_NO_AUTO_UPDATE=true
 fi
 
 # For OMSA, stupid dell
