@@ -47,7 +47,7 @@ be-aws () {
 
     # Validate region
     case $region in
-        us-east-1|us-west-2|ap-southeast-1|eu-west-1)
+        us-east-1|us-west-2|ap-southeast-1|eu-west-1|ap-southeast-2)
             :
             ;;
         east)
