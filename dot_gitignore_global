@@ -12,3 +12,8 @@
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+
+# files I might put in a repo to hold local settings
+.setup
+.setup-*
+

@@ -339,6 +339,7 @@ if [ "$(uname)" = "Darwin" ]; then
     export HOMEBREW_NO_INSTALL_CLEANUP=true
     export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=true
     export HOMEBREW_NO_AUTO_UPDATE=true
+    export HOMEBREW_CASK_OPTS='--no-quarantine'
 fi
 
 # For OMSA, stupid dell
@@ -390,10 +391,10 @@ if [ -d /usr/local/go ]; then
     fi
 fi
 
-# For things puppet
-if [ -d /opt/puppetlabs/bin ]; then
-    append PATH /opt/puppetlabs/bin
-fi
+#-## For things puppet
+#-#if [ -d /opt/puppetlabs/bin ]; then
+#-#    append PATH /opt/puppetlabs/bin
+#-#fi
 
 # Tokens
 if [[ -f ~/.config/private/.tokens ]]; then
