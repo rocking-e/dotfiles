@@ -185,3 +185,12 @@
 			  (local-set-key (kbd "C-c C-r")
 					 'go-remove-unused-imports)))
 (add-to-list 'exec-path (concat (getenv "HOME") "/Source/go/bin"))
+
+;;; From MS Copilot
+(defun open-default-file ()
+  "Open a default file when Emacs starts without any specified file."
+  (when (and (not (buffer-file-name))
+             (equal (buffer-name) "*scratch*"))
+    (find-file "~/Library/Application Support/Aquamacs Emacs/scratch buffer")))
+
+(add-hook 'emacs-startup-hook 'open-default-file)
