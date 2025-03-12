@@ -446,3 +446,9 @@ fi
 if [[ -d ~/Source/eg-github/davide/my-centos7 ]]; then
     alias centos7="~/Source/eg-github/davide/my-centos7/run-it.sh"
 fi
+
+# Set environment variables to support the "pass" command and GPG
+if [[ "$(uname)" = "Linux" && -f /usr/bin/pass && -f /usr/bin/gpg ]]; then
+    export  GPG_TTY="$(tty)"
+    export SAML2AWS_KEYRING_BACKEND=pass
+fi
