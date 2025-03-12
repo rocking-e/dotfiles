@@ -1,0 +1,275 @@
+Host teleport-proxy
+  HostName teleport.us-east-1.runtime.prod-cts.exp-aws.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+#  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+#  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+#  CASignatureAlgorithms +ssh-rsa
+
+
+Host 10.120.* 10.121.* 10.7.* 10.44.*
+  ForwardAgent yes 
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22 
+#  ProxyCommand ssh -o "LogLevel DEBUG3" -o "ForwardAgent yes" -p 3023 teleport-proxy -s proxy:%h:%p
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 teleport-proxy -s proxy:%h:%p
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+   CASignatureAlgorithms +ssh-rsa
+
+Host ip-10-120* ip-10-121* dns-prod-* dns-egdp-prod-*
+  ForwardAgent yes 
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+#  HostName %h 
+  Port 22 
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 davide@teleport-proxy -s proxy:%h:%p
+
+Host tp-node-a
+  ForwardAgent yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 3023
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 ec2-user@teleport.us-east-1.runtime.prod-cts.exp-aws.net -s proxy:%h:%p
+
+
+#TP# runtime-test/us-east-1 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtime-test-east
+   HostName teleport.us-east-1.runtime.test.exp-aws.net
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   ForwardAgent yes
+   LogLevel ERROR
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+
+Host *.us-east-1.runtime.test.exp-aws.net
+   ForwardAgent yes 
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel ERROR
+   Port 22 
+   ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtime-test-east -s proxy:%h:%p
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+   CASignatureAlgorithms +ssh-rsa
+
+#TP# runtime-test/us-west-2 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtime-test-west
+   HostName teleport.us-west-2.runtime.test.exp-aws.net
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   ForwardAgent yes
+   LogLevel ERROR
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+
+Host *.us-west-2.runtime.test.exp-aws.net
+   ForwardAgent yes 
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel ERROR
+   Port 22 
+   ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtime-test-west -s proxy:%h:%p
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+   CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimects-test/us-east-1 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimects-test-east
+   HostName teleport.us-east-1.runtime.test-cts.exp-aws.net
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   ForwardAgent yes
+   LogLevel ERROR
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+
+Host *.us-east-1.runtime.cts-test.exp-aws.net
+   ForwardAgent yes 
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel ERROR
+   Port 22 
+   ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimects-test-east -s proxy:%h:%p
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+   CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimects-test/us-west-2 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimects-test-west
+   HostName teleport.us-west-2.runtime.test-cts.exp-aws.net
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   ForwardAgent yes
+   LogLevel ERROR
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+
+Host *.us-west-2.runtime.cts-test.exp-aws.net
+   ForwardAgent yes 
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel ERROR
+   Port 22 
+   ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimects-test-west -s proxy:%h:%p
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+   CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimects-prod/us-east-1 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimects-prod-east
+  HostName teleport.us-east-1.runtime.prod-cts.exp-aws.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  CASignatureAlgorithms +ssh-rsa
+
+# This is the configuration that allows one to proxy through Teleport to
+# a destination node. The "Host" line needs to contain all the host and
+# IP patterns for production hosts you want to reach.
+Host *.us-east-1.runtime.prod-cts.exp-aws.net  *.decaf.expecn.com 10.232.93.236 10.162.32.32 10.162.32.31
+  ForwardAgent yes 
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22 
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimects-prod-east -s proxy:%h:%p
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+  CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimects-prod/us-west-2 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimects-prod-west
+   HostName teleport.us-west-2.runtime.prod-cts.exp-aws.net
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel ERROR
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+
+# This is the configuration that allows one to proxy through Teleport to
+# a destination node. The "Host" line needs to contain all the host and
+# IP patterns for production hosts you want to reach.
+Host *.us-west-2.runtime.prod-cts.exp-aws.net
+  ForwardAgent yes 
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22 
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimects-prod-west -s proxy:%h:%p
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+  CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimects-prod/eu-west-1 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimects-prod-eu-west
+   HostName teleport.eu-west-1.runtime.prod-cts.exp-aws.net
+   StrictHostKeyChecking no
+   UserKnownHostsFile /dev/null
+   LogLevel ERROR
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+
+# This is the configuration that allows one to proxy through Teleport to
+# a destination node. The "Host" line needs to contain all the host and
+# IP patterns for production hosts you want to reach.
+Host *.eu-west-1.runtime.prod-cts.exp-aws.net
+  ForwardAgent yes
+  IdentityFile ~/.ssh/davide_4096.pub
+  # IdentitiesOnly yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22 
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimects-prod-eu-west -s proxy:%h:%p
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+  CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimecde-prod/us-east-1 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimecde-prod-east
+  HostName teleport.us-east-1.runtime.prod-cde.exp-aws.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  CASignatureAlgorithms +ssh-rsa
+
+# SSH proxy configuration for us-east-1 hosts
+Host *.us-east-1.runtime.prod-cde.exp-aws.net !teleport.us-east-1.runtime.prod-cde.exp-aws.net
+    Port                  3022
+    ProxyCommand /usr/local/bin/tsh proxy ssh --cluster=runtimecde-prod-us-east-1 --proxy=teleport.us-east-1.runtime.prod-cde.exp-aws.net:443 %r@%h:%p
+
+#TP# runtimecde-prod/us-west-2 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimecde-prod-west
+  HostName teleport.us-west-2.runtime.prod-cde.exp-aws.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  CASignatureAlgorithms +ssh-rsa
+
+# This is the configuration that allows one to proxy through Teleport to
+# a destination node. The "Host" line needs to contain all the host and
+# IP patterns for production hosts you want to reach.
+Host *.us-west-2.runtime.prod-cde.exp-aws.net
+  ForwardAgent yes 
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22 
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimecde-prod-west -s proxy:%h:%p
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+  CASignatureAlgorithms +ssh-rsa
+
+#TP# runtimecde-prod/eu-west-1 ----------------------------------------------------------------
+# Define a host that will be used in the actual SSH proxy configuration
+Host runtimecde-prod-eu-west
+  HostName teleport.eu-west-1.runtime.prod-cde.exp-aws.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+  CASignatureAlgorithms +ssh-rsa
+
+# This is the configuration that allows one to proxy through Teleport to
+# a destination node. The "Host" line needs to contain all the host and
+# IP patterns for production hosts you want to reach.
+Host *.eu-west-1.runtime.prod-cde.exp-aws.net
+  ForwardAgent yes 
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22 
+  ProxyCommand ssh -o "ForwardAgent yes" -p 3023 runtimecde-prod-eu-west -s proxy:%h:%p
+  HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com
+  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com
+  CASignatureAlgorithms +ssh-rsa
+

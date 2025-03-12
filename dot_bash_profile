@@ -1,0 +1,36 @@
+# Startup file for bash login shells.
+#
+echo "evaluating ~/.bash_profile on tty `tty`"
+
+if [ "$PS1" ]; then
+  # PS1='\h(L)\\$ '
+  # setting ignoreeof means it will take that many EOF's before the shell exits
+  ignoreeof=3
+fi
+
+LOGIN_SHELL=true
+
+if [ -f ~/.bashrc ]; then
+  echo start .bashrc @ $(date)
+  source ~/.bashrc
+  echo finish .bashrc @ $(date)
+fi
+
+# Now some things that are only for login shells
+echo "now setting things up for login shell"
+if [ -r ~/.env-setup ] ; then source ~/.env-setup; fi
+
+# make terminal ignore alternate screen
+#export TERM=xterm1
+
+#if [ ! -d ~/.script-output ]; then mkdir ~/.script-output; fi
+#script ~/.script-output/log-$(date +%s)$(tty | tr '/' '-')
+
+export BASH_SILENCE_DEPRECATION_WARNING=1
+
+echo "finished evaluating ~/.bash_profile"
+
+#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+

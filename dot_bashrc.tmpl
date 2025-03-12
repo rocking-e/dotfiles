@@ -374,6 +374,9 @@ fi
 
 ## For pyenv, but not on docker images
 if [[ -d ~/.pyenv/shims && ! -f /.dockerenv ]]; then
+    if [[ -d ~/.pyenv/bin ]]; then
+        prepend PATH ~/.pyenv/bin
+    fi
     prepend PATH ~/.pyenv/shims
     export PYENV_ROOT=~/.pyenv
     if command -v pyenv 1>/dev/null 2>&1; then
@@ -400,7 +403,7 @@ fi
 if [[ -f ~/.config/private/.tokens ]]; then
     source ~/.config/private/.tokens
 fi
-export CDPATH='.:~:~/Source/eg-github/hci-sysops/:~/Source/eg-github/dpi-image-factory:~/Source/eg-github/davide'
+export CDPATH='.:~:~/Source/eg-github/hci-sysops/:~/Source/eg-github/teleport:~/Source/eg-github/dpi-image-factory:~/Source/eg-github/davide'
 
 # Jesse's nsupdog
 alias nsupdog='docker run --rm -it --mount type=bind,source="$(pwd)",target=/work,readonly dl2.homeawaycorp.com/techops-docker/nsupdog:0.2.0'

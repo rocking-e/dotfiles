@@ -1,0 +1,67 @@
+#Include teleport_config
+
+# Configuration to be able to use "davide" on github.com and not davide_expedia
+   Host ashldweu2201a.karmalab.net
+     HostName ashldweu2201a.karmalab.net
+
+Host gh-davide
+     HostName github.com
+     User git
+     IdentityFile ~/.ssh/private/davide_ed25519
+
+# For connecting to vagrant box with default ssh port of 2222
+Host local2222
+    HostName 127.0.0.1
+    Port 2222
+    StrictHostKeyChecking no
+
+Host rocking-e.com eckelkamp.info www.eckelkamp.info water.rapidvps.com
+   User rockin
+   
+# It should also be possible to set the Identity file to the
+# TechOps SSH key to log in as root.
+Host 10.122.* 10.125.* 10.123.* 10.124.* 10.127.* 10.0.73.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+
+# Hosts in the ecpcpcloudaccount and eit-hicore-virtualization-sandbox AWS accounts
+Host 10.0.73.* 10.0.74.* 10.31.41.* 10.31.42.* 10.31.43.* 10.216.* 10.225.* *.us-east-1.ecpcpcloudaccount.test.exp-aws.net *.us-west-1.ecpcpcloudaccount.test.exp-aws.net 10.145.54.* *.us-east1.eit-hicore-virtualization-sandbox.exp-aws.net *.us-west-2.eit-hicore-virtualization-sandbox.exp-aws.net
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  IdentityFile ~/.ssh/hci-sysops-cts
+  LogLevel ERROR
+  User ec2-user
+ 
+# Hosts in the hicore-sandbox AWS account
+Host 10.2.200.* *.us-west-2.hicore-sandbox.test.exp-aws.net *.us-east-1.hicore-sandbox.test.exp-aws.net
+  ForwardAgent yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  User ec2-user
+
+# Connect to AWS EC2 instances via SSM proxy.
+Host i-*
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  # IdentityFile ~/.ssh/techops-ssh-key
+  User ec2-user
+  ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+
+Host *.karmalab.net *.sea.corp.expecn.com
+     LogLevel ERROR
+
+Host *
+#   UseKeychain    yes
+#   AddKeysToAgent yes
+#   PasswordAuthentication=no
+   User davide
+   ServerAliveInterval 240
+   ForwardAgent yes
+   ForwardX11 no
+   HostKeyAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   #PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
+   CASignatureAlgorithms +ssh-rsa
+#   ConnectTimeout 30
