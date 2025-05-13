@@ -181,7 +181,6 @@ alias z=suspend
 alias op="sudo -u operator"
 # For idiot Macs.
 alias HEAD="lwp-request -m HEAD"
-alias last="/usr/bin/last | grep -v nessus | head"
 alias co="git checkout"
 alias br="git branch"
 alias brl="git brl"
@@ -373,7 +372,7 @@ if [ -d ~/.rbenv/bin ]; then
 fi
 
 ## For pyenv, but not on docker images
-if [[ -d ~/.pyenv/shims && ! -f /.dockerenv ]]; then
+if [[ -d ~/.pyenv/bin && ! -f /.dockerenv ]]; then
     if [[ -d ~/.pyenv/bin ]]; then
         prepend PATH ~/.pyenv/bin
     fi
