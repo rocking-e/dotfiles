@@ -1,4 +1,4 @@
-tap "brand-expedia/tools", "https://github.expedia.biz/Brand-Expedia/homebrew-tools.git", force_auto_update: true
+tap "brand-expedia/tools", "https://github.expedia.biz/Brand-Expedia/homebrew-tools.git"
 tap "d12frosted/emacs-plus"
 tap "hci-sysops/teleport", "git@github.com:eg-internal/homebrew-teleport.git"
 tap "homebrew/bundle"
@@ -79,12 +79,14 @@ brew "d12frosted/emacs-plus/emacs-plus@31", args: ["with-retro-sink-bw-icon"]
 brew "hci-sysops/teleport/teleport@16.4", link: true
 brew "hci-sysops/teleport/teleport@16.5"
 brew "hci-sysops/teleport/teleport@9.3"
+cask "brave-browser"
 cask "chatgpt"
 cask "drawio"
 cask "keepassxc"
 cask "powershell"
 cask "session-manager-plugin"
 cask "sqlworkbenchj"
+cask "teleport-connect"
 vscode "bierner.markdown-preview-github-styles"
 vscode "docker.docker"
 vscode "fredwangwang.vscode-hcl-format"
