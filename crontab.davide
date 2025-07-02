@@ -1,0 +1,4 @@
+# This cronjob is intended to keep my username cached by sssd so
+# logins don't have to fetch each time, which is sllloooowwwww.
+*/30 * * * *	id | sed 's/,/\n/g'
+
