@@ -83,10 +83,13 @@ cask "brave-browser"
 cask "chatgpt"
 cask "drawio"
 cask "keepassxc"
+cask "pandora"
 cask "powershell"
 cask "session-manager-plugin"
 cask "sqlworkbenchj"
 cask "teleport-connect"
+mas "AdBlock Pro", id: 1018301773
+mas "Bitwarden", id: 1352778147
 vscode "bierner.markdown-preview-github-styles"
 vscode "docker.docker"
 vscode "fredwangwang.vscode-hcl-format"
