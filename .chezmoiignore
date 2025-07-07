@@ -2,6 +2,9 @@ README.md
 Brewfile
 *~
 
+setup-4-eg.sh
+crontab.davide
+
 .emacs.d/auto-save-list/
 .emacs.d/auto-save-list/**
 .emacs.d/elpa/
