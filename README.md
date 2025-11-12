@@ -35,6 +35,10 @@ age-keygen -o ${HOME}/age.txt
 It isn't required to have age installed on all systems where your dot files are deployed. It only
 needs to be install on one system so you can use the `age-keygen` command.
 
+## Setup for New Mac
+
+There are a couple of "chicken and egg" problems. To install `chezmoi` and apply the dotfiles repository you have to have the PAT so you can log in. And since the `Brewfile` is in this repository you can't do `brew bundle install` to get Bitwarden installed to get the token. So you have to use the web vault. And that requires the Yubikey be setup.
+
 
 ## References
 
