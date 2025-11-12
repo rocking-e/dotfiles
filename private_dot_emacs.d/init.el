@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; This is an Emacs initialization file.
 ;; Add Emacs-Lisp code here that should be executed whenever
 ;; you start Emacs. If errors occur, Emacs will stop
@@ -18,6 +19,10 @@
 (add-to-list #'load-path my-elisp-dir)
 
 (require 'misc-funcs)
+
+;;; set delete-selection-mode so selected text is deleted when typiing or
+;;; pasting
+(delete-selection-mode 1)
 
 (setq 
  require-final-newline t
@@ -191,6 +196,7 @@
   "Open a default file when Emacs starts without any specified file."
   (when (and (not (buffer-file-name))
              (equal (buffer-name) "*scratch*"))
-    (find-file "~/Library/Application Support/Aquamacs Emacs/scratch buffer")))
+    (find-file "~/.scratch-buffer")
+    (rename-buffer "scratch-buffer")))
 
 (add-hook 'emacs-startup-hook 'open-default-file)

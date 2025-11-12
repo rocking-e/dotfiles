@@ -411,7 +411,7 @@ fi
 if [[ -f ~/.config/private/.tokens ]]; then
     source ~/.config/private/.tokens
 fi
-export CDPATH='.:~:~/Source/eg-github/hci-sysops/:~/Source/eg-github/teleport:~/Source/eg-github/dpi-image-factory:~/Source/eg-github/davide'
+export CDPATH='.:~:~/Source/eg-github/teleport-enterprise-cloud:~/Source/eg-github/hci-sysops/:~/Source/eg-github/teleport:~/Source/eg-github/dpi-image-factory:~/Source/eg-github/davide'
 
 # Jesse's nsupdog
 alias nsupdog='docker run --rm -it --mount type=bind,source="$(pwd)",target=/work,readonly dl2.homeawaycorp.com/techops-docker/nsupdog:0.2.0'
@@ -435,6 +435,8 @@ fi
 alias tf="get-creds; /usr/local/bin/terraform"
 alias aws="get-creds; $AWS_CLI"
 alias tg="get-creds; /usr/local/bin/terragrunt"
+alias tgp="tg plan -out /tmp/the.plan"
+alias tga="tg apply /tmp/the.plan"
 alias terraform="get-creds; /usr/local/bin/terraform"
 alias terragrunt="get-creds; /usr/local/bin/terragrunt"
 
