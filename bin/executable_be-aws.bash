@@ -9,7 +9,7 @@
 
 # The be-aws function requires 2 arguments. The first is the name of a profile
 # that is defined user's ~/.aws/credentials. The other is the region or the
-# approved/coded region abbreviates. The script accecpts "east" to mean
+# approved/coded region abbreviates. The script accepts "east" to mean
 # us-east-1 and "west" to mean us-west-2. It also accepts "ap" to be
 # ap-southeast-1 and "eu" to be eu-west-1.
 
@@ -41,8 +41,9 @@ be-aws () {
 
     # Validate profile
     if ! grep --quiet "^\[${profile}\]" ~/.aws/credentials; then
+        echo "Danger Will Robinson!"
         echo "Could not find given profile in ~/.aws/credentials"
-        return 4
+        echo "Using profile: ${profile}, but things may not work as expected"
     fi
 
     # Validate region

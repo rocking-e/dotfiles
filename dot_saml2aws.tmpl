@@ -875,6 +875,81 @@ target_url =
 disable_remember_device = false
 disable_sessions = false
 
+[infrastructurects-mgt]
+name = infrastructurects-mgt
+app_id =
+url = https://expediagroup.okta.com/home/amazon_aws/0oabxth5ywMofbFqo357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = infrastructurects-mgt
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::854236232917:role/PowerUser
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
+[infrastructurecde-prodp]
+name = infrastructurecde-prodp
+app_id =
+url = https://sapps-expediagroup.okta.com/home/amazon_aws/0oa8180uskyvkfUbW357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = infrastructurecde-prodp
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::657537645439:role/PowerUser
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
+[infrastructurecde-prodp-jit]
+name = infrastructurecde-prodp-jit
+app_id =
+url = https://sapps-expediagroup.okta.com/home/amazon_aws/0oa8180uskyvkfUbW357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = infrastructurecde-prodp
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::657537645439:role/hci-sysops-jit-access
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
 [eginfrastructure-test]
 name = eginfrastructure-test
 app_id =
