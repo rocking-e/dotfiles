@@ -40,53 +40,56 @@ fi
 
 teleport-login () {
     if [[ $# = 0 ]]; then
-	echo "usage $0 teleport-cluster-host"
-	return 1
+        echo "usage $0 teleport-cluster-host"
+        return 1
     fi
     case "$1" in
-	runtime-test-east)
-	    tp_host=teleport.us-east-1.runtime.test.exp-aws.net
-	    ;;
-	runtime-test-west)
-	    tp_host=teleport.us-west-2.runtime.test.exp-aws.net
-	    ;;
-	runtimects-test-east)
-	    tp_host=teleport.us-east-1.runtime.test-cts.exp-aws.net
-	    ;;
-	runtimects-test-west)
-	    tp_host=teleport.us-west-2.runtime.test-cts.exp-aws.net
-	    ;;
-	runtimects-prod-east)
-	    tp_host=teleport.us-east-1.runtime.prod-cts.exp-aws.net
-	    ;;
-	runtimects-prod-west)
-	    tp_host=teleport.us-west-2.runtime.prod-cts.exp-aws.net
-	    ;;
-	runtimects-prod-eu-west)
-	    tp_host=teleport.eu-west-1.runtime.prod-cts.exp-aws.net
-	    ;;
-        runtimecde-prod-east)
-	    tp_host=teleport.us-east-1.runtime.prod-cde.exp-aws.net
-	    ;;
-	runtimecde-prod-west)
-	    tp_host=teleport.us-west-2.runtime.prod-cde.exp-aws.net
-	    ;;
-	runtimecde-prod-eu-west)
-	    tp_host=teleport.eu-west-1.runtime.prod-cde.exp-aws.net
-	    ;;
-	ecp|ecpcpcloudaccount)
-	    tp_host=teleport.us-east-1.ecpcpcloudaccount.test.exp-aws.net
-	    ;;
-	hicore-sandbox)
-	    tp_host=teleport.us-west-2.hicore-sandbox.test.exp-aws.net
-	    ;;
-	*)
-	    tp_host="$1"
-	    ;;
+    runtime-test-east)
+        tp_host=teleport.us-east-1.runtime.test.exp-aws.net
+        ;;
+    runtime-test-west)
+        tp_host=teleport.us-west-2.runtime.test.exp-aws.net
+        ;;
+    runtimects-test-east)
+        tp_host=teleport.us-east-1.runtime.test-cts.exp-aws.net
+        ;;
+    runtimects-test-west)
+        tp_host=teleport.us-west-2.runtime.test-cts.exp-aws.net
+        ;;
+    runtimects-prod-east)
+        tp_host=teleport.us-east-1.runtime.prod-cts.exp-aws.net
+        ;;
+    runtimects-prod-west)
+        tp_host=teleport.us-west-2.runtime.prod-cts.exp-aws.net
+        ;;
+    runtimects-prod-eu-west)
+        tp_host=teleport.eu-west-1.runtime.prod-cts.exp-aws.net
+        ;;
+    runtimects-prod-ap-southeast)
+        tp_host=teleport.ap-southeast-1.runtime.prod-cts.exp-aws.net
+        ;;
+    runtimecde-prod-east)
+        tp_host=teleport.us-east-1.runtime.prod-cde.exp-aws.net
+        ;;
+    runtimecde-prod-west)
+        tp_host=teleport.us-west-2.runtime.prod-cde.exp-aws.net
+        ;;
+    runtimecde-prod-eu-west)
+        tp_host=teleport.eu-west-1.runtime.prod-cde.exp-aws.net
+        ;;
+    ecp|ecpcpcloudaccount)
+        tp_host=teleport.us-east-1.ecpcpcloudaccount.test.exp-aws.net
+        ;;
+    hicore-sandbox)
+        tp_host=teleport.us-west-2.hicore-sandbox.test.exp-aws.net
+        ;;
+    *)
+        tp_host="$1"
+        ;;
     esac
     if ! grep --quiet "HostName ${tp_host}" "${TELEPORT_SSH_CONFIG}"; then
-	echo "Host ${tp_host} not found in config file"
-	return 3
+        echo "Host ${tp_host} not found in config file"
+        return 3
     fi
 
     tsh login --proxy="$tp_host"
@@ -95,7 +98,7 @@ teleport-login () {
 _teleport-login-completions () {
     local tphosts
     tphosts=$(grep -A 10 '^#TP#' "${TELEPORT_SSH_CONFIG}" |
-		  awk '/HostName t/{print $2} /Host /{print $2}')
+          awk '/HostName t/{print $2} /Host /{print $2}')
     tphosts="${tphosts} hicore-sandbox ecp ecpcpcloudaccount"
     COMPREPLY=($(compgen -W "$tphosts" -- "${COMP_WORDS[1]}"))
 } &&
@@ -107,28 +110,28 @@ tl () {
 
 teleport-logout () {
     if [[ $# = 0 ]]; then
-	echo "usage $0 teleport-cluster-host"
-	return 1
+        echo "usage $0 teleport-cluster-host"
+        return 1
     fi
-	 
+     
     if ! grep --quiet "HostName ${tp_host}" "${TELEPORT_SSH_CONFIG}"; then
-	echo "Host ${tp_host} not found in config file"
-	return 3
+        echo "Host ${tp_host} not found in config file"
+        return 3
     fi
 
     if [[ -z $TELEPORT_LOGIN ]]; then
-	tp_user="$(id -un)@expediagroup.com"
+        tp_user="$(id -un)@expediagroup.com"
     else
-	tp_user="${TELEPORT_LOGIN}@expediagroup.com"
+        tp_user="${TELEPORT_LOGIN}@expediagroup.com"
     fi
-	   
+       
     tsh logout --user="${tp_user}"  --proxy="$1"
 }
 
 _teleport-logout-completions () {
     local tphosts
     tphosts=$(ssh-add -l | grep teleport: | cut -d' ' -f 3 |
-		  cut -d: -f2 | sort -u)
+          cut -d: -f2 | sort -u)
     COMPREPLY=($(compgen -W "$tphosts" -- "${COMP_WORDS[1]}"))
 }
 to () {
@@ -139,8 +142,8 @@ complete -f _teleport-logout-completions to
 
 tp () {
     if [[ -f ~/.tsh/current-profile ]]; then
-	cat ~/.tsh/current-profile
+        cat ~/.tsh/current-profile
     else
-	echo "No current profile for Teleport"
+        echo "No current profile for Teleport"
     fi
 }

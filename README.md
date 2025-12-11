@@ -39,6 +39,10 @@ needs to be install on one system so you can use the `age-keygen` command.
 
 There are a couple of "chicken and egg" problems. To install `chezmoi` and apply the dotfiles repository you have to have the PAT so you can log in. And since the `Brewfile` is in this repository you can't do `brew bundle install` to get Bitwarden installed to get the token. So you have to use the web vault. And that requires the Yubikey be setup.
 
+### Install Homebrew
+
+On EG Macs you can't install `brew` via the official method. Instead, you have to use a script provided by eIT. The KB article [BeyondTrust Privilege Management: Homebrew Install & Dev notes](https://expedia.service-now.com/askeg?id=kb_article&sys_id=8ea0523747df56d8b50b19fab46d435c&table=kb_knowledge&searchTerm=install%20brew) contains the script (installBrew.sh)[https://expedia.service-now.com/sys_attachment.do?sys_id=c2a0de7747df56d8b50b19fab46d43a9]
+
 
 ## References
 
