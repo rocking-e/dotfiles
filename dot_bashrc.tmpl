@@ -21,69 +21,102 @@ fi
 # The additions/modifications are given in arguments 3 and 4, as
 # necessary.  The supported operations are append, prepend, remove, replace.
 modpath () {
-  local value result
-  eval value=\"\$$2\"
-  case "$1" in 
-    prepend)
-      case "$value" in
-        *:$3:*|*:$3|$3:*|$3)
-          result="$value"
-          ;;
-        .:*)
-          result=".:$3${value#.}"
-          ;;
-        "")
-          result="$3"
-          ;;
-        *)
-          result="$3:${value}"
-          ;;
-      esac
-      ;;
-    append)
-      case "$value" in
-        *:$3:*|*:$3|$3:*|$3)
-          result="$value"
-          ;;
-        *:.)
-          result="${value%.}$3:."
-          ;;
-        "")
-          result="$3"
-          ;;
-        *)
-          result="${value}:$3"
-          ;;
-      esac
-      ;;
-    remove)
-      for i in $(IFS=:; echo $value); do
-          if [ "$i" != "$3" ]; then
-              case "$result" in
-                "") result="$i" ;;
-                *) result="$result:$i" ;;
-              esac
-          fi
-      done
-      ;;
-    replace)
-      for i in $(IFS=:; echo $value); do
-          if [ "$i" != "$3" ]; then
-              case "$result" in
-                "") result="$i" ;;
-                *) result="$result:$i" ;;
-              esac
-          else
-              case $result in
-                "") result="$4";;
-                *)  result="$result:$4"
-              esac
-          fi
-      done
-      ;;
-  esac
+    # safer modpath that doesn't rely on word-splitting and therefore
+    # correctly handles path elements containing spaces or special
+    # characters such as parentheses. Arguments:
+    #   $1 = operation: prepend|append|remove|replace
+    #   $2 = name of the variable to operate on
+    #   $3 = element to add/remove/replace
+    #   $4 = replacement value (for replace)
+    local op name value result add repl
+    op="$1"; name="$2"; add="$3"; repl="$4"
 
-  eval $2=$result
+    # read the current value of the named variable (may be empty)
+    eval "value=\"\${${name}-}\""
+
+    # iterator: print each element (split only on ':') without word-splitting
+    _iter_parts() {
+        local s="$1"
+        while [ -n "$s" ]; do
+            local part
+            if [[ "$s" == *:* ]]; then
+                part="${s%%:*}"
+                s="${s#*:}"
+            else
+                part="$s"
+                s=""
+            fi
+            printf '%s\n' "$part"
+        done
+    }
+
+    case "$op" in
+        prepend)
+            # if already present, keep as-is
+            result="$value"
+            while IFS= read -r part; do
+                if [ "$part" = "$add" ]; then
+                    # already present
+                    :
+                    break
+                fi
+            done < <(_iter_parts "$value")
+            if [ -z "$value" ]; then
+                result="$add"
+            else
+                # if not found, prepend
+                if ! printf '%s\n' "$value" | grep -xF -- "$add" >/dev/null 2>&1; then
+                    result="$add:$value"
+                fi
+            fi
+            ;;
+        append)
+            result="$value"
+            if [ -z "$value" ]; then
+                result="$add"
+            else
+                if ! printf '%s\n' "$value" | grep -xF -- "$add" >/dev/null 2>&1; then
+                    result="$value:$add"
+                fi
+            fi
+            ;;
+        remove)
+            result=""
+            while IFS= read -r part; do
+                if [ "$part" != "$add" ]; then
+                    if [ -z "$result" ]; then
+                        result="$part"
+                    else
+                        result="$result:$part"
+                    fi
+                fi
+            done < <(_iter_parts "$value")
+            ;;
+        replace)
+            result=""
+            while IFS= read -r part; do
+                if [ "$part" != "$add" ]; then
+                    if [ -z "$result" ]; then
+                        result="$part"
+                    else
+                        result="$result:$part"
+                    fi
+                else
+                    if [ -z "$result" ]; then
+                        result="$repl"
+                    else
+                        result="$result:$repl"
+                    fi
+                fi
+            done < <(_iter_parts "$value")
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+
+    # assign back to named variable safely (no eval that suffers word-splitting)
+    printf -v "$name" '%s' "$result"
 }
 
 # convenience routine which appends a string to a path.
