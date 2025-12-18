@@ -6,7 +6,7 @@ These are my "dot files", the files I want on a machine I'm going to use. It can
 or a Linux server. These files include my shell initialization files (like `.bashrc`) as well as
 other configuration files (like `~/.ssh/authorized_keys`).
 
-The [chezmoi installation](https://www.chezmoi.io/install/) has comprehensive installation
+The [chezmoi installation](https://www.chezmoi.io/install/) document has comprehensive installation
 instructions. The simplest and easiest way is a one-liner:
 
 ```
@@ -18,6 +18,14 @@ not public you can provide the full URL.
 
 ```
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply "https://github.com/$(id -un)/dotfiles"
+```
+
+Or, if your GigHub "organization/user" is not the same as the username on the computer
+that needs the dot files, you can use this command, changing `rocking-e` with your GitHub
+user or organization
+
+```
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply "https://github.com/rocking-e/dotfiles"
 ```
 
 ## Encryption

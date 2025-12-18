@@ -52,20 +52,18 @@ modpath () {
 
     case "$op" in
         prepend)
-            # if already present, keep as-is
             result="$value"
-            while IFS= read -r part; do
-                if [ "$part" = "$add" ]; then
-                    # already present
-                    :
-                    break
-                fi
-            done < <(_iter_parts "$value")
             if [ -z "$value" ]; then
                 result="$add"
             else
-                # if not found, prepend
-                if ! printf '%s\n' "$value" | grep -xF -- "$add" >/dev/null 2>&1; then
+                present=false
+                while IFS= read -r part; do
+                    if [ "$part" = "$add" ]; then
+                        present=true
+                        break
+                    fi
+                done < <(_iter_parts "$value")
+                if ! $present; then
                     result="$add:$value"
                 fi
             fi
@@ -75,7 +73,14 @@ modpath () {
             if [ -z "$value" ]; then
                 result="$add"
             else
-                if ! printf '%s\n' "$value" | grep -xF -- "$add" >/dev/null 2>&1; then
+                present=false
+                while IFS= read -r part; do
+                    if [ "$part" = "$add" ]; then
+                        present=true
+                        break
+                    fi
+                done < <(_iter_parts "$value")
+                if ! $present; then
                     result="$value:$add"
                 fi
             fi
@@ -404,27 +409,30 @@ if [ -d ~/.rbenv/bin ]; then
     #eval "$(rbenv init -)"
 fi
 
+{{ if eq .chezmoi.os "linux" }}
+{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# This is only needed on WSL instances
+# Remove /mnt/c pyenv directories from PATH
+_pyenv_path="$(command -v pyenv 2>/dev/null || true)
+if [[ -n "$_pyenv_path" && "$_pyenv_path" == /mnt/c* ]]; then
+    # remove pyenv-win by removing from PATH so it doesn't cause problems
+    export PATH="$(echo "${PATH} | tr ':' '\n' | grep -v '^/mnt/c/.*/\.pyenv' | paste -sd:
+    -)
+fi
+{{   end }}
+{{ end }}
+
 ## For pyenv, but not on docker images
 if [[ ! -f /.dockerenv ]]; then
     # Not in container
-    export PYENV_ROOT="${HOME}/.pyenv"
-    [[ -d ${PYENV_ROOT}/bin ]] && prepend PATH ${PYENV_ROOT}/bin
-    [[ -d ${PYENV_ROOT}/shims ]] && prepend PATH ${PYENV_ROOT}/shims
-    if command -v pyenv 1>/dev/null 2>&1; then
-	eval "$(pyenv init - bash)"
+    if [[ -x "${HOME}/.pyenv/bin/pyenv" ]]; then
+        export PYENV_ROOT="${HOME}/.pyenv"
+        [[ -d ${PYENV_ROOT}/bin ]] && prepend PATH ${PYENV_ROOT}/bin
+        [[ -d ${PYENV_ROOT}/shims ]] && prepend PATH ${PYENV_ROOT}/shims
+    	eval "$("${HOME}.pyenv/bin/pyenv" init - bash)"
     fi
 fi
-#if [[ -d ~/.pyenv/shims && ! -f /.dockerenv ]]; then
-#    if [[ -d ~/.pyenv/bin ]]; then
-#        prepend PATH ~/.pyenv/bin
-#    fi
-#    prepend PATH ~/.pyenv/shims
-#    export PYENV_ROOT=~/.pyenv
-#    if command -v pyenv 1>/dev/null 2>&1; then
-#	eval "$(pyenv init -)"
-#	#eval "$(pyenv virtualenv-init -)"
-#    fi
-#fi
+
 export PYTHONDONTWRITEBYTECODE=1
 
 if [ -d /usr/local/go ]; then
