@@ -10,3 +10,8 @@ crontab.davide
 .emacs.d/elpa/
 .emacs.d/elpa/**
 .emacs.d/history
+
+# Ignore this file everywhere except WSL
+{{- if or (ne .chezmoi.os "linux") (eq (env "WSL_DISTRO_NAME") "") -}}
+bin/executable_wsl-ssh-agent.sh
+{{- end }}
