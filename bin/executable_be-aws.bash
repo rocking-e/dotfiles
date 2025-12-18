@@ -21,8 +21,7 @@ fi
 
 if [[ ! -f ~/.aws/credentials ]]; then
     echo "File not found: ~/.aws/credentials"
-    echo "That file must exist for this to work"
-    return 2
+    echo "Things may not work properly without that file"
 fi
 
 be-aws () {
