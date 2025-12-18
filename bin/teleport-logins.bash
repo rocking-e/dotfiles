@@ -11,7 +11,7 @@
 # declares the various Teleport clusters. The section for each cluster
 # must start with '#TP#'. The "Host" and "HostName" lines will be used
 # for completion. By default the config file is
-# ~/.ssh/teleport_config. That can be changed by seting the
+# ~/.ssh/teleport_config. That can be changed by setting the
 # environment variable "TELEPORT_SSH_CONFIG"
 
 # The username for the 'tsh login' can be specified via the
@@ -20,7 +20,7 @@
 # The teleport-login function 
 # The be-aws function requires 2 arguments. The first is the name of a profile
 # that is defined user's ~/.aws/credentials. The other is the region or the
-# approved/coded region abbreviates. The script accecpts "east" to mean
+# approved/coded region abbreviates. The script accepts "east" to mean
 # us-east-1 and "west" to mean us-west-2. It also accepts "ap" to be
 # ap-southeast-1 and "eu" to be eu-west-1.
 

@@ -148,7 +148,7 @@ replace () {
 # with C-d.  I set this to 2 so that it requires 3 successive ^D's to exit
 ignoreeof=2
 
-# Set auto_resume if you want TWENEX style behaviour for command names.
+# Set auto_resume if you want TWENEX style behavior for command names.
 auto_resume=
 
 # Set notify if you want to be asynchronously notified about background
@@ -183,7 +183,7 @@ export HISTSIZE=10000
 # set this if you want the shell to notify you when you have new mail
 unset MAILCHECK
 
-# put multi-line commands in seperate history lines
+# put multi-line commands in separate history lines
 shopt -u lithist 
 shopt -u cmdhist
 
@@ -383,18 +383,6 @@ fi
 [ -d /opt/dell/srvadmin/sbin/ ] && append PATH /opt/dell/srvadmin/sbin
 [ -d /opt/dell/srvadmin/bin ] && append PATH /opt/dell/srvadmin/bin
 
-## For Maven (mvn) on the mac
-#Mavend="${HOME}/Source/maven"
-#if [ -d "$Mavend" ]; then
-#    echo "setting up for maven"
-#    #Create an alias in your shells profile to point to both versions
-#    MAVEN_HOME2=${Mavend}/apache-maven-2.2.1
-#    MAVEN_HOME3=${Mavend}/apache-maven-3.2.1
-#    alias mvn2=$MAVEN_HOME2/bin/mvn
-#    alias mvn3=$MAVEN_HOME3/bin/mvn
-#    alias mvn=$MAVEN_HOME3/bin/mvn
-#fi
-
 # For Perl
 if [ -d ~/perl5/lib/perl5 ]; then
     export PERL5LIB=~/perl5/lib/perl5
@@ -413,11 +401,10 @@ fi
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 # This is only needed on WSL instances
 # Remove /mnt/c pyenv directories from PATH
-_pyenv_path="$(command -v pyenv 2>/dev/null || true)
+_pyenv_path="$(command -v pyenv 2>/dev/null || true)"
 if [[ -n "$_pyenv_path" && "$_pyenv_path" == /mnt/c* ]]; then
     # remove pyenv-win by removing from PATH so it doesn't cause problems
-    export PATH="$(echo "${PATH} | tr ':' '\n' | grep -v '^/mnt/c/.*/\.pyenv' | paste -sd:
-    -)
+    export PATH="$(echo "${PATH}" | tr ':' '\n' | grep -v '^/mnt/c/.*/\.pyenv' | paste -sd: -)"
 fi
 {{   end }}
 {{ end }}
