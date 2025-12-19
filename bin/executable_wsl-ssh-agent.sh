@@ -6,7 +6,8 @@ set -euo pipefail
 # Path to npiperelay.exe as seen from WSL.
 # Adjust this or set NPIPERELAY_EXE in your env if needed.
 # NPIPERELAY_EXE="${NPIPERELAY_EXE:-/mnt/c/Windows/System32/npiperelay.exe}"
-NPIPERELAY_EXE="${NPIPERELAY_EXE:-${HOME}/.ssh/npiperelay.exe}"
+# NPIPERELAY_EXE="${NPIPERELAY_EXE:-${HOME}/win/.ssh/npiperelay.exe}"
+NPIPERELAY_EXE="${NPIPERELAY_EXE:-/mnt/c/Users/davide/.ssh/npiperelay.exe}"
 
 # Windows OpenSSH agent named pipe
 WIN_AGENT_PIPE='//./pipe/openssh-ssh-agent'
