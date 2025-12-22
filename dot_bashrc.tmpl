@@ -381,7 +381,15 @@ fi
 {{ if eq .chezmoi.os "linux" }}
 {{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
 # Setup socate and npiperelay to share the SSH_AUTH_SOCK between Windows and WSL instances
-if ! pgrep socat >/dev/null; then
+# But only if not already running
+if [[ -f ~/.ssh/agent-wsl2-socat.pid ]]; then
+    pid=$(cat ~/.ssh/agent-wsl2-socat.pid)
+    if pgrep -F ~/.ssh/agent-wsl2-socat.pid >/dev/null; then
+        export SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-$HOME/.ssh/agent.sock}
+    else
+        rm -f ~/.ssh/agent-wsl2-socat.pid
+    fi
+else
     echo sourcing bin/wsl-ssh-agent.sh
     . bin/wsl-ssh-agent.sh
 fi
