@@ -421,7 +421,7 @@ if [[ ! -f /.dockerenv ]]; then
         export PYENV_ROOT="${HOME}/.pyenv"
         [[ -d ${PYENV_ROOT}/bin ]] && prepend PATH ${PYENV_ROOT}/bin
         [[ -d ${PYENV_ROOT}/shims ]] && prepend PATH ${PYENV_ROOT}/shims
-    	eval "$("${HOME}.pyenv/bin/pyenv" init - bash)"
+    	eval "$("${HOME}/.pyenv/bin/pyenv" init - bash)"
     fi
 fi
 
