@@ -387,7 +387,9 @@ if [[ -f ~/.ssh/agent-wsl2-socat.pid ]]; then
     if pgrep -F ~/.ssh/agent-wsl2-socat.pid >/dev/null; then
         export SSH_AUTH_SOCK=${SSH_AUTH_SOCK:-$HOME/.ssh/agent.sock}
     else
+        echo "Stale WSL ssh-agent pid file found. Restarting wsl-ssh-agent.sh"
         rm -f ~/.ssh/agent-wsl2-socat.pid
+        . bin/wsl-ssh-agent.sh
     fi
 else
     echo sourcing bin/wsl-ssh-agent.sh
