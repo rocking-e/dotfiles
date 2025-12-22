@@ -311,13 +311,11 @@ function gbout {
 # Seems a LANG of UTF-8 causes some problems with my settings. 
 # Try to unset it on Linux hosts.
 if [ "$(uname)" = "Linux" ]; then
-    setenv LANG en_US.iso88591
-    setenv LOCALE C
+    setenv LANG en_US.UTF-8
 fi
 
 if [ "$(uname)" = "Darwin" ]; then
     setenv LANG C
-    setenv LOCALE C
 fi
 
 if [ -f /etc/bash_completion ]; then
@@ -379,9 +377,16 @@ if [ "$(uname)" = "Darwin" ]; then
     export HOMEBREW_CASK_OPTS='--no-quarantine'
 fi
 
-# For OMSA, stupid dell
-[ -d /opt/dell/srvadmin/sbin/ ] && append PATH /opt/dell/srvadmin/sbin
-[ -d /opt/dell/srvadmin/bin ] && append PATH /opt/dell/srvadmin/bin
+# For Windows WSL environments
+{{ if eq .chezmoi.os "linux" }}
+{{   if (.chezmoi.kernel.osrelease | lower | contains "microsoft") }}
+# Setup socate and npiperelay to share the SSH_AUTH_SOCK between Windows and WSL instances
+if ! pgrep socat >/dev/null; then
+    echo sourcing bin/wsl-ssh-agent.sh
+    . bin/wsl-ssh-agent.sh
+fi
+{{   end }}
+{{ end }}
 
 # For Perl
 if [ -d ~/perl5/lib/perl5 ]; then

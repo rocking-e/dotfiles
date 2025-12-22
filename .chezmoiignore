@@ -11,7 +11,7 @@ crontab.davide
 .emacs.d/elpa/**
 .emacs.d/history
 
-# Ignore this file everywhere except WSL
-{{- if or (ne .chezmoi.os "linux") (eq (env "WSL_DISTRO_NAME") "") -}}
-bin/executable_wsl-ssh-agent.sh
-{{- end }}
+# Ignore the wsl-ss-agent.sh script on non-WSL systems.
+{{ if or (eq .chezmoi.os "darwin") (not (.chezmoi.kernel.osrelease | lower | contains "microsoft")) }}
+bin/wsl-ssh-agent.sh
+{{ end }}
