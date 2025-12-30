@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 # wsl-ssh-agent.sh - expose Windows ssh-agent inside WSL2 via npiperelay + socat
 
-set -euo pipefail
+# Guard: ensure this file is sourced, not executed
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  echo "This file must be sourced, not executed." >&2
+  exit 1
+fi
 
 # Path to npiperelay.exe as seen from WSL.
 # Adjust this or set NPIPERELAY_EXE in your env if needed.
-# NPIPERELAY_EXE="${NPIPERELAY_EXE:-/mnt/c/Windows/System32/npiperelay.exe}"
-# NPIPERELAY_EXE="${NPIPERELAY_EXE:-${HOME}/win/.ssh/npiperelay.exe}"
 NPIPERELAY_EXE="${NPIPERELAY_EXE:-/mnt/c/Users/davide/.ssh/npiperelay.exe}"
 
 # Windows OpenSSH agent named pipe
@@ -22,14 +24,14 @@ mkdir -p "$(dirname "$SSH_AUTH_SOCK")"
 
 if ! command -v socat >/dev/null 2>&1; then
     echo "Error: socat not found. Install it with: sudo apt install socat" >&2
-    exit 1
+    return 1
 fi
 
 if [ ! -x "$NPIPERELAY_EXE" ]; then
     echo "Error: npiperelay.exe not found or not executable at:" >&2
     echo "  $NPIPERELAY_EXE" >&2
     echo "Set NPIPERELAY_EXE to the correct path and retry." >&2
-    exit 1
+    return 1
 fi
 
 # If an old socat is running, stop it
