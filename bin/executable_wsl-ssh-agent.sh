@@ -7,9 +7,12 @@ if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
   exit 1
 fi
 
+# Get the Windows username so we can build the default path to npiperelay.exe
+WIN_USER="$(cmd.exe /C "echo %USERNAME%" 2>/dev/null | tr -d '\r')"
+
 # Path to npiperelay.exe as seen from WSL.
 # Adjust this or set NPIPERELAY_EXE in your env if needed.
-NPIPERELAY_EXE="${NPIPERELAY_EXE:-/mnt/c/Users/davide/.ssh/npiperelay.exe}"
+NPIPERELAY_EXE="${NPIPERELAY_EXE:-/mnt/c/Users/${WIN_USER}/.ssh/npiperelay.exe}"
 
 # Windows OpenSSH agent named pipe
 WIN_AGENT_PIPE='//./pipe/openssh-ssh-agent'
