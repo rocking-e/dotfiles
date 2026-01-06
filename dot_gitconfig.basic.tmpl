@@ -1,7 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
-	name = David Eckelkamp (davide)
-	email = davide@expediagroup.com
+	name = {{ .name }} ({{ .chezmoi.username }})
+	email = {{ .email }}
 
 [init]
 	defaultBranch = main
@@ -52,7 +52,7 @@
 [mergetool]
     keepBackup = true
 [core]
-    excludesfile = /Users/davide/.gitignore_global
+    excludesfile = {{ .chezmoi.homeDir }}/.gitignore_global
     editor = emacs
 [difftool "sourcetree"]
     cmd = opendiff \"$LOCAL\" \"$REMOTE\"
@@ -73,3 +73,37 @@
 	algorithm = histogram
 [help]
 	autocorrect = prompt
+
+# Setup "insteadOf" configurations for the various GitHub accounts I use. 
+# This allows the Git Credential Manager (GCM) to manage authentication tokens properly
+#
+# 1) EG GitHub Enterprise Server (github.expedia.biz)
+#    Uses whatever account SSO gives you; GCM will store the token.
+[url "https://github.expedia.biz/"]
+    insteadOf = git@github.expedia.biz:
+    insteadOf = ssh://git@github.expedia.biz/
+    insteadOf = https://github.expedia.biz/
+
+#
+# 2a) EG org on github.com (GHEC) use {{ .chezmoi.username }}_expedia
+#    First time GCM prompts for this URL family, sign in as {{ .chezmoi.username }}_expedia.
+#
+[url "https://github.com/eg-internal/"]
+    insteadOf = git@github.com:eg-internal/
+    insteadOf = ssh://git@github.com/eg-internal/
+    insteadOf = https://github.com/eg-internal/
+
+# 2b) My personal repos on github.com use {{ .chezmoi.username }}_expedia
+#    First time GCM prompts for this URL family, sign in as {{ .chezmoi.username }}_expedia.
+[url "https://github.com/{{ .chezmoi.username }}_expedia/"]
+    insteadOf = git@github.com:{{ .chezmoi.username }}_expedia/
+    insteadOf = ssh://git@github.com/{{ .chezmoi.username }}_expedia/
+    insteadOf = https://github.com/{{ .chezmoi.username }}_expedia/
+
+#
+# 3) For my repos on GitHub.com - use rocking-e
+#    First time GCM prompts here, sign in as rocking-e.
+[url "https://rocking-e@github.com/rocking-e/"]
+    insteadOf = git@github.com:rocking-e/
+    insteadOf = ssh://git@github.com/rocking-e/
+    insteadOf = https://github.com/rocking-e/

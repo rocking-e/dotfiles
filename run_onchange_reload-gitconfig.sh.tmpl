@@ -23,18 +23,18 @@ source "${token_file}"
 # copy the .basic file to the actual .gitconfig file
 cp "${git_config_basic}" "${git_config}"
 
-if ! grep -q "insteadof.*=.*https://${eg_github}" ~/.gitconfig; then
-    git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}/.insteadof https://${eg_github}
+if ! grep -q "insteadOf.*=.*https://${eg_github}" ~/.gitconfig; then
+    git config --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}/.insteadOf https://${eg_github}
 fi
-if ! grep -q "insteadof.*=.*git@${eg_github}" ~/.gitconfig; then
-    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}/.insteadof git@${eg_github}:
+if ! grep -q "insteadOf.*=.*git@${eg_github}" ~/.gitconfig; then
+    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_github_token}@${eg_github}/.insteadOf git@${eg_github}:
 fi
 
-if ! grep -q "insteadof.*=.*https://${eg_ghec}" ~/.gitconfig; then
-    git config --global url.https://{{ .chezmoi.username }}:${!eg_ghec_token}@${eg_ghec}/.insteadof https://${eg_ghec}
+if ! grep -q "insteadOf.*=.*https://${eg_ghec}" ~/.gitconfig; then
+    git config --global url.https://{{ .chezmoi.username }}:${!eg_ghec_token}@${eg_ghec}/.insteadOf https://${eg_ghec}
 fi
-if ! grep -q "insteadof.*=.*git@${eg_ghec}" ~/.gitconfig; then
-    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_ghec_token}@${eg_ghec}/.insteadof git@${eg_ghec}:
+if ! grep -q "insteadOf.*=.*git@${eg_ghec}" ~/.gitconfig; then
+    git config --add --global url.https://{{ .chezmoi.username }}:${!eg_ghec_token}@${eg_ghec}/.insteadOf git@${eg_ghec}:
 fi
 
 
