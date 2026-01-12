@@ -424,14 +424,18 @@ fi
 {{   end }}
 {{ end }}
 
-## For pyenv, but not on docker images
+## Setup pyenv, but not on docker images
 if [[ ! -f /.dockerenv ]]; then
     # Not in container
-    if [[ -x "${HOME}/.pyenv/bin/pyenv" ]]; then
-        export PYENV_ROOT="${HOME}/.pyenv"
-        [[ -d ${PYENV_ROOT}/bin ]] && prepend PATH ${PYENV_ROOT}/bin
-        [[ -d ${PYENV_ROOT}/shims ]] && prepend PATH ${PYENV_ROOT}/shims
-    	eval "$("${HOME}/.pyenv/bin/pyenv" init - bash)"
+    _pyenv="$(command -v pyenv 2>/dev/null || true)"
+    if [[ -n "${_pyenv}" ]]; then
+        # We have pyenv so set PYENV_ROOT, adjust PATH and eval init
+        if [[ -d "${HOME}/.pyenv" ]]; then
+            export PYENV_ROOT="${HOME}/.pyenv"
+            [[ -d ${PYENV_ROOT}/bin ]] && prepend PATH ${PYENV_ROOT}/bin
+            [[ -d ${PYENV_ROOT}/shims ]] && prepend PATH ${PYENV_ROOT}/shims
+            eval "$("$_pyenv" init - bash)"
+        fi
     fi
 fi
 

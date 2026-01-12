@@ -24,6 +24,11 @@ output             = json
 region             = us-west-2
 credential_process = aws_key_gen login -p hicore-sandbox
 
+[profile image-factory]
+output             = json
+region             = us-west-2
+credential_process = aws_key_gen login -p image-factory
+
 [profile eit-hicore-virtualization-sandbox]
 output             = json
 region             = us-west-2
