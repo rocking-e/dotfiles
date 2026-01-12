@@ -98,6 +98,31 @@ target_url =
 disable_remember_device = false
 disable_sessions = false
 
+[image-factory]
+name = image-factory
+app_id =
+url = https://expediagroup.okta.com/home/amazon_aws/0oa2mb7o2guMuY9lG357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = image-factory
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::472168774908:role/Admin
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
 [runtimects-test]
 name = runtimects-test
 app_id =
