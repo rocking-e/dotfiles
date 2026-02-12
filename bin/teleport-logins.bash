@@ -44,6 +44,12 @@ teleport-login () {
         return 1
     fi
     case "$1" in
+    egtest)
+        tp_host=egtest.teleport.sh
+        ;;
+    egprod|expedialogroup)
+        tp_host=expediagroup.teleport.sh
+        ;;
     runtime-test-east)
         tp_host=teleport.us-east-1.runtime.test.exp-aws.net
         ;;
@@ -87,10 +93,10 @@ teleport-login () {
         tp_host="$1"
         ;;
     esac
-    if ! grep --quiet "HostName ${tp_host}" "${TELEPORT_SSH_CONFIG}"; then
-        echo "Host ${tp_host} not found in config file"
-        return 3
-    fi
+    # if ! grep --quiet "HostName ${tp_host}" "${TELEPORT_SSH_CONFIG}"; then
+    #     echo "Host ${tp_host} not found in config file"
+    #     return 3
+    # fi
 
     tsh login --proxy="$tp_host"
 }
@@ -99,7 +105,7 @@ _teleport-login-completions () {
     local tphosts
     tphosts=$(grep -A 10 '^#TP#' "${TELEPORT_SSH_CONFIG}" |
           awk '/HostName t/{print $2} /Host /{print $2}')
-    tphosts="${tphosts} hicore-sandbox ecp ecpcpcloudaccount"
+    tphosts="${tphosts} hicore-sandbox ecp ecpcpcloudaccount egtest egprod expediagroup"
     COMPREPLY=($(compgen -W "$tphosts" -- "${COMP_WORDS[1]}"))
 } &&
     complete -F _teleport-login-completions teleport-login
@@ -138,7 +144,7 @@ to () {
     teleport-logout "$@"
 }
 complete -F _teleport-logout-completions teleport-logout
-complete -f _teleport-logout-completions to
+complete -F _teleport-logout-completions to
 
 tp () {
     if [[ -f ~/.tsh/current-profile ]]; then
