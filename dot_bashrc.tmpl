@@ -515,3 +515,7 @@ if [[ "$(uname)" = "Linux" && -f /usr/bin/pass && -f /usr/bin/gpg ]]; then
     export  GPG_TTY="$(tty)"
     export SAML2AWS_KEYRING_BACKEND=pass
 fi
+
+# Set environment varaibles for node
+# Use system trust store instead of built in trust store to get EG certs.
+export NODE_USE_SYSTEM_CA=1
