@@ -154,3 +154,13 @@ output             = json
 region             = us-east-1
 credential_process = aws_key_gen -p egdp-analytics_sso-ha-infra
 
+[profile cc]
+sso_session = cc
+sso_account_id = 817807756991
+sso_role_name = ClaudeAccess
+region = us-east-1
+[sso-session cc]
+sso_start_url = https://d-9066270955.awsapps.com/start
+sso_region = us-east-1
+sso_registration_scopes = sso:account:access
+
