@@ -29,3 +29,9 @@ encryption = "age"
 [data]
     email = "{{ $email }}"
     name = "{{ $name }}"
+
+# Use emacs. The args say connect to a server if it exists or start
+# a new emacs if one doesn't exist.
+[edit]
+    command = "emacsclient"
+    args = ["-c", "-a", "emacs"]

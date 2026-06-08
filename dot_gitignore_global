@@ -17,3 +17,5 @@
 .setup
 .setup-*
 
+
+**/.claude/settings.local.json

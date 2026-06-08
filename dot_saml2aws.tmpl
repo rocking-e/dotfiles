@@ -750,6 +750,106 @@ target_url =
 disable_remember_device = false
 disable_sessions = false
 
+[lodgingpartner-test]
+name = lodgingpartner-test
+app_id =
+url = https://expediagroup.okta.com/home/amazon_aws/0oa2mb7o2guMuY9lG357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = lodgingpartner-test
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::829706961041:role/ReadOnly
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
+[lodgingpartner-test-jit]
+name = lodgingpartner-test-jit
+app_id =
+url = https://expediagroup.okta.com/home/amazon_aws/0oa2mb7o2guMuY9lG357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = lodgingpartner-test
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::829706961041:role/hci-sysops-jit-access
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
+[lodgingpartnerp-test]
+name = lodgingpartnerp-test
+app_id =
+url = https://expediagroup.okta.com/home/amazon_aws/0oa2mb7o2guMuY9lG357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = lodgingpartnerp-test
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::748513450882:role/ReadOnly
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
+[lodgingpartnerp-test-jit]
+name = lodgingpartnerp-test-jit
+app_id =
+url = https://expediagroup.okta.com/home/amazon_aws/0oa2mb7o2guMuY9lG357/272
+username = {{ .chezmoi.username }}
+provider = Okta
+mfa = PUSH
+skip_verify = false
+timeout = 0
+aws_urn = urn:amazon:webservices
+aws_session_duration = 3600
+aws_profile = lodgingpartnerp-test
+resource_id =
+subdomain =
+role_arn = arn:aws:iam::748513450882:role/hci-sysops-jit-access
+region =
+http_attempts_count =
+http_retry_delay =
+credentials_file =
+saml_cache = false
+saml_cache_file =
+target_url =
+disable_remember_device = false
+disable_sessions = false
+
 [infrastructurects-dw]
 name = infrastructurects-dw
 app_id =

@@ -356,6 +356,7 @@ if [[ $(uname -m) = 'arm64' ]]; then
 fi
 
 prepend PATH ~/bin
+[ -d ~/.local/bin ] && prepend PATH ~/.local/bin
 
 append PATH /usr/local/sbin
 append PATH /usr/sbin
