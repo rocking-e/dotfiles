@@ -49,6 +49,10 @@ def main():
                         help="Add the flag to disable sessions")
     parser.add_argument('-j', '--jit', action='store_true',
                         help="Add '-jit' to the specified profile to authenticate for a JIT role")
+    parser.add_argument('-r', '--readonly', action='store_true',
+                        help="Add '-readonly' to the specified profile to authenticate for a readonly role")
+    parser.add_argument('-u', '--user', action='store_true',
+                        help="Add '-user' to the specified profile to authenticate for a user role")
     parser.add_argument('-n', '--dry-run', action='store_true',
                         help="Show the command that would be executed, but don't actually execute it.")
     args = parser.parse_args()
@@ -72,10 +76,14 @@ def main():
     config = ConfigParser()
     config.read(cred_file)
 
-    # If JIT flag is set, modify the profile name
-    aws_profile_no_jit = aws_profile
+    # If JIT/readonly/user flags are set, modify the profile name
+    aws_profile_no_suffix = aws_profile
     if args.jit:
         aws_profile = f'{aws_profile}-jit'
+    if args.readonly:
+        aws_profile = f'{aws_profile}-readonly'
+    if args.user:
+        aws_profile = f'{aws_profile}-user'
 
     # Set local timezone, we might need it later
     LOCAL_TIMEZONE = datetime.now(timezone.utc).astimezone().tzinfo
@@ -109,9 +117,9 @@ def main():
     if args.force:
         cmd += ' --force'
 
-    # Reset aws_profile to original if it was modified for JIT
-    if args.jit:
-        aws_profile = aws_profile_no_jit
+    # Reset aws_profile to original if it was modified for JIT/readonly/user
+    if args.jit or args.readonly or args.user:
+        aws_profile = aws_profile_no_suffix
 
     if config.has_section(aws_profile):
         expire_time_str = config.get(aws_profile, EXPIRE_LABEL,
