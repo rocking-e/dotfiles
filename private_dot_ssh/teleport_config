@@ -7,6 +7,12 @@ Host teleport-proxy
 #  PubkeyAcceptedAlgorithms +ssh-rsa-cert-v01@openssh.com,ssh-rsa
 #  CASignatureAlgorithms +ssh-rsa
 
+Host tpcld*  *.hicore-sandbox.test.exp-aws.net *.infrastructure.test-cts.exp-aws.net
+  ForwardAgent yes
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null
+  LogLevel ERROR
+  Port 22
 
 Host 10.120.* 10.121.* 10.7.* 10.44.*
   ForwardAgent yes 

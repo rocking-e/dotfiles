@@ -16,139 +16,111 @@ region=us-east-2
 [profile ecpcpcloudaccount]
 output=json
 region=us-east-1
-credential_process=aws_key_gen login -p ecpcpcloudaccount
 
 [profile hicore-sandbox]
 output=json
 region=us-west-2
-credential_process=aws_key_gen login -p hicore-sandbox
 
 [profile image-factory]
 output=json
 region=us-west-2
-credential_process=aws_key_gen login -p image-factory
 
 [profile eit-hicore-virtualization-sandbox]
 output=json
 region=us-west-2
-credential_process=aws_key_gen login -p eit-hicore-virtualization-sandbox
 
 [profile runtimects-test]
 output=json
 region=us-east-1
-credential_process=aws_key_gen login -p runtimects-test
 
 [profile runtimecde-prodp]
 output=json
 region=us-west-2
-credential_process=aws_key_gen login -p runtimecde-prodp
 
 [profile runtime-test]
 output=json
 region=us-west-2
-credential_process=aws_key_gen login -p runtime-test
 
 [profile runtime-prod]
 output=json
 region=us-west-2
-credential_process=aws_key_gen login -p runtime-prod
 
 [profile travelmob_infra]
 output=json
 region=us-east-1
-credential_process=awsprocesscreds-saml -e https://homeaway.okta.com/home/amazon_aws/0oa18skkzadpPVQ3m0h8/272 -u 'davide' -p okta -a arn:aws:iam::491397298816:role/sso-infra
 
 [profile prod_sso-ha-dev]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a prod
 
 [profile prod_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a prod
 
 [profile dev_sso-ha-dev]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a dev
 
 [profile dev_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a dev
 
 [profile test_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a test
 
 [profile test_sso-ha-dev]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a test
 
 [profile stage_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a stage
 
 [profile stage_sso-ha-dev]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a stage
 
 [profile mgmt_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a mgmt
 
 [profile mgmt_sso-ha-dev]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a mgmt
 
 [profile corp_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a corp
 
 [profile egdp-prod_sso-ha-dev]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a egdp-prod
 
 [profile egdp-prod_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a egdp-prod
 
 [profile egdp-stage_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a egdp-stage
 
 [profile egdp-dev_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a egdp-dev
 
 [profile egdp-test_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a egdp-test
 
 [profile egdp-datawarehouse_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=awscredz okta -a egdp-datawarehouse
 
 [profile egstreaming-test]
 output=json
 region=us-east-1
-credential_process=aws_key_gen login -p egstreaming-test
 
 [profile egdp-analytics_sso-ha-infra]
 output=json
 region=us-east-1
-credential_process=aws_key_gen -p egdp-analytics_sso-ha-infra

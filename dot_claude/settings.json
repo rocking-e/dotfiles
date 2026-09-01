@@ -21,12 +21,16 @@
       "Bash(sudo *)"
     ]
   },
+    "model": "sonnet",
   "statusLine": {
     "type": "command",
     "command": "bash /Users/davide/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "repo-maintainers@eg-skills": true
-  },
+    "repo-maintainers@eg-skills": true,
+    "devflow@eg-skills": true,
+    "ci-cd@eg-skills": true,
+    "git-workflows@eg-skills": true
+ },
   "theme": "dark-daltonized"
 }

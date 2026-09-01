@@ -200,3 +200,22 @@
     (rename-buffer "scratch-buffer")))
 
 (add-hook 'emacs-startup-hook 'open-default-file)
+
+# Enable recentf for keeping recent files.
+(use-package recentf
+  :ensure nil ; Built-in package
+  :init
+  (recentf-mode 1)
+  :config
+  ;; Increase the max number of saved items (default is 20)
+  (setq recentf-max-saved-items 100)
+  
+  ;; Save the recent files list every 5 minutes to prevent data loss on crashes
+  (run-at-time nil 300 'recentf-save-list)
+  
+  ;; Exclude repetitive, noisy, or unneeded files from tracking
+  (setq recentf-exclude
+        '("/ssh:"
+          "/sudo:"
+          "\\.emacs\\.d/elpa/"
+          "\\.git/")))
