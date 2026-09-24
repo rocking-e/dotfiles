@@ -201,7 +201,7 @@
 
 (add-hook 'emacs-startup-hook 'open-default-file)
 
-# Enable recentf for keeping recent files.
+;;; Enable recentf for keeping recent files.
 (use-package recentf
   :ensure nil ; Built-in package
   :init
